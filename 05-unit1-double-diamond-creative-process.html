@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Double Diamond Creative Process Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --accent-color: #38bdf8;
+        --accent-hover: #0284c7;
+        --success-color: #22c55e;
+        --warning-color: #ef4444;
+        --text-color: #f8fafc;
+        --border-color: #334155;
+        --muted: #8b91a8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container {
+        max-width: 900px;
+        width: 100%;
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    h1, h2, h3 {
+        font-family: 'Rajdhani', sans-serif;
+        color: var(--accent-color);
+        margin-top: 0;
+    }
+
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .status-indicators {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .score-box, .timer-box {
+        background: rgba(0,0,0,0.3);
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .timer-box.urgent {
+        border-color: var(--warning-color);
+        color: var(--warning-color);
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    .diamond-tracker {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        gap: 10px;
+    }
+
+    .stage-card {
+        flex: 1;
+        background: rgba(0,0,0,0.3);
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        opacity: 0.5;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+    .stage-card.active {
+        opacity: 1;
+        border-color: var(--accent-color);
+        background: rgba(56, 189, 248, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .stage-card.completed {
+        opacity: 1;
+        border-color: var(--success-color);
+        background: rgba(34, 197, 94, 0.1);
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        height: 10px;
+        background: var(--border-color);
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 15px 0 25px 0;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: var(--accent-color);
+        transition: width 0.3s ease;
+    }
+
+    .game-panel {
+        background: rgba(0,0,0,0.2);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .option-btn {
+        display: block;
+        width: 100%;
+        text-align: left;
+        background: #0f172a;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+        background: var(--border-color);
+    }
+
+    .option-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    textarea {
+        width: 100%;
+        height: 70px;
+        background: #0f172a;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        border-radius: 6px;
+        box-sizing: border-box;
+        resize: vertical;
+        margin-top: 5px;
+        font-family: inherit;
+    }
+
+    button.primary-btn {
+        background: var(--accent-color);
+        color: #0f172a;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.2s;
+    }
+
+    button.primary-btn:hover {
+        background: var(--accent-hover);
+        color: white;
+    }
+
+    .btn-ghost {
+        background: transparent;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+        background: var(--border-color);
+    }
+
+    .feedback-text {
+        margin-top: 15px;
+        padding: 12px;
+        border-radius: 6px;
+        display: none;
+    }
+
+    .feedback-success {
+        background: rgba(34, 197, 94, 0.2);
+        border: 1px solid var(--success-color);
+    }
+
+    .feedback-warning {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid var(--warning-color);
+    }
+
+    .stage-box {
+        background: rgba(0,0,0,0.15);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(8, 9, 14, 0.85);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 28px 26px;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        text-align: center;
+    }
+
+    .modal-card h2 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        color: var(--warning-color);
+    }
+
+    .modal-card p {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--text-color);
+        margin-bottom: 20px;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    @media print {
+        .no-print { display: none !important; }
+        body { background: white; color: black; }
+        .container { box-shadow: none; background: white; color: black; }
+        textarea { border: 1px solid #999; color: black; background: white; }
+        .stage-card { opacity: 1; border-color: #999; }
+        .stage-box { border: 1px solid #ccc; background: transparent; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-bar">
+        <h1>💎 Double Diamond Creative Process</h1>
+        <div class="status-indicators">
+            <div class="timer-box" id="timerBox">
+                ⏱️ <span id="timerDisplay">5:00</span>
+            </div>
+            <div class="score-box">
+                Score: <span id="score">0</span> pts
+            </div>
+        </div>
+    </div>
+    <p>Simulate real esports creative challenges across <strong>Discover, Define, Develop, and Deliver</strong>. Answer correctly before the 5-minute timer expires! Note: Incorrect answers deduct 1 point[cite: 1].</p>
+
+    <!-- Visual Diamond Tracker -->
+    <div class="diamond-tracker">
+        <div id="card-stage-1" class="stage-card active">
+            <strong>1. DISCOVER</strong><br><small id="prog-1">0/5 Done</small>
+        </div>
+        <div id="card-stage-2" class="stage-card">
+            <strong>2. DEFINE</strong><br><small id="prog-2">0/5 Done</small>
+        </div>
+        <div id="card-stage-3" class="stage-card">
+            <strong>3. DEVELOP</strong><br><small id="prog-3">0/5 Done</small>
+        </div>
+        <div id="card-stage-4" class="stage-card">
+            <strong>4. DELIVER</strong><br><small id="prog-4">0/5 Done</small>
+        </div>
+    </div>
+
+    <div class="progress-bar-container">
+        <div id="total-progress" class="progress-bar"></div>
+    </div>
+
+    <!-- Active Stage Interactive Area -->
+    <div id="game-panel" class="game-panel">
+        <!-- JS populates content -->
+    </div>
+
+    <!-- Student Learning Journal Worksheet -->
+    <h2>✍️ Student Learning Journal</h2>
+    <p style="font-size: 0.9rem; color: #94a3b8;">Document your process below as you work through the simulation. Click print when finished to export your written task.</p>
+
+    <div style="margin-bottom: 20px;">
+        <label><strong>1. Purpose of the Creative Process:</strong> Why do creative professionals use a structured model like the Double Diamond instead of jumping straight to the first solution?</label>
+        <textarea id="journal-purpose" style="height: 80px;" placeholder="Explain user-centred focus, risk reduction, and evidence-based decision making..."></textarea>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label><strong>2. Stage Summary & Examples:</strong> Summarize what happens in each stage using examples from the scenarios you played:</label>
+        <div id="randomized-stages-container" style="margin-top: 10px;">
+            <!-- JS populates textfields -->
+        </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label><strong>3. Extension Question:</strong> Which stage do you evaluate as the MOST important, and why?</label>
+        <textarea id="journal-extension" style="height: 80px;" placeholder="Justify your choice with examples (e.g. why Discover prevents building the wrong product, or why Deliver ensures client satisfaction)..."></textarea>
+    </div>
+
+    <button class="primary-btn no-print" onclick="window.print()">🖨️ Print / Save Journal PDF</button>
+</div>
+
+<!-- Retry / Time Up Modal -->
+<div class="modal-overlay" id="timeOutModal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <h2>⏰ Time's Up!</h2>
+        <p id="modalMessage">You ran out of time before completing all the stages.</p>
+        <div class="modal-actions">
+            <button class="primary-btn" onclick="retryGame()">🔄 Try Again</button>
+            <button class="btn-ghost" onclick="closeModal()">Review Worksheet</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStage = 1;
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let activeQuestions = {};
+
+    // Timer variables
+    const TIME_LIMIT = 300; // 5 minutes in seconds[cite: 2]
+    let remainingTime = TIME_LIMIT;
+    let timerInterval = null;
+    let isGameActive = false;
+
+    // Question Bank
+    const questionBank = {
+        1: [ // STAGE 1: DISCOVER
+            {
+                title: "Stage 1: DISCOVER (Research & Insights)",
+                scenario: "<strong>Scenario 1.1 (Broadcast Drop):</strong> Stream engagement dropped by 40% last month. What is your first research step?",
+                options: [
+                    { text: "A) Redesign the entire stream overlay immediately because it looks old.", correct: false, pts: 10, feedback: "⚠️ Jumped straight to solutions! In Discover, gather evidence before designing." },
+                    { text: "B) Interview viewers, analyze watch-time data, observe chat behavior, and survey fans.", correct: true, pts: 10, feedback: "✅ Excellent! Discover focuses on user research, observation, and gathering insights." },
+                    { text: "C) Cut the broadcast budget in half to save money.", correct: false, pts: 10, feedback: "⚠️ Making budget cuts without research ignores the root problem." }
+                ]
+            },
+            {
+                title: "Stage 1: DISCOVER (Research & Insights)",
+                scenario: "<strong>Scenario 1.2 (Jersey Sales):</strong> Your esports team's jersey sales are failing. How do you start the project?",
+                options: [
+                    { text: "A) Immediately order 1,000 neon green jerseys because neon is popular on TikTok.", correct: false, pts: 10, feedback: "⚠️ You assumed what fans want without checking. Research first!" },
+                    { text: "B) Collect mood boards, research rival org merch, survey fans on sizing/fabric preferences, and audit sales data.", correct: true, pts: 10, feedback: "✅ Perfect! Discover requires studying target users, market trends, and existing data." },
+                    { text: "C) Blame the players' tournament losses for poor sales.", correct: false, pts: 10, feedback: "⚠️ Deflecting responsibility instead of doing creative research won't build a better product." }
+                ]
+            },
+            {
+                title: "Stage 1: DISCOVER (Research & Insights)",
+                scenario: "<strong>Scenario 1.3 (Sponsor Campaign):</strong> An energy drink brand wants a social media campaign, but you don't know what content to create. What do you do?",
+                options: [
+                    { text: "A) Force pro players to post 20 daily banner ads on Twitter.", correct: false, pts: 10, feedback: "⚠️ Generic spam annoys fans and skips user research." },
+                    { text: "B) Analyze audience demographics, track past high-performing posts, and study rival sponsor activations.", correct: true, pts: 10, feedback: "✅ Great choice! Gathering user data and analyzing industry benchmarks ensures data-driven ideas." },
+                    { text: "C) Copy another esports team's campaign exact word for word.", correct: false, pts: 10, feedback: "⚠️ Copying ignores your specific audience's unique interests." }
+                ]
+            },
+            {
+                title: "Stage 1: DISCOVER (Research & Insights)",
+                scenario: "<strong>Scenario 1.4 (Arena Mascot):</strong> Your arena wants to launch a physical mascot. How do you gather ideas during Discover?",
+                options: [
+                    { text: "A) Ask local fan groups for feedback, observe crowd reactions during matches, and research famous sports mascots.", correct: true, pts: 10, feedback: "✅ Spot on! Discover uses qualitative interviews and competitor analysis to inspire ideas." },
+                    { text: "B) Pick your personal favorite animal without asking anyone.", correct: false, pts: 10, feedback: "⚠️ Creative decisions must be user-centred, not purely personal preference." },
+                    { text: "C) Buy a cheap costume online and hope fans like it.", correct: false, pts: 10, feedback: "⚠️ Skipping research risks wasting budget on a mascot fans won't connect with." }
+                ]
+            },
+            {
+                title: "Stage 1: DISCOVER (Research & Insights)",
+                scenario: "<strong>Scenario 1.5 (YouTube Content):</strong> Views on your team's YouTube VODs are declining. What is the proper Discover action?",
+                options: [
+                    { text: "A) Post 10 videos a day to force algorithm traffic.", correct: false, pts: 10, feedback: "⚠️ Quantity doesn't solve poor audience fit—gather insights first!" },
+                    { text: "B) Review video analytics (drop-off times), audit thumbnail click-through rates, and run a community poll.", correct: true, pts: 10, feedback: "✅ Perfect! Data audits and community surveys form strong Discover research." },
+                    { text: "C) Delete the YouTube channel and move to Facebook.", correct: false, pts: 10, feedback: "⚠️ Drastic changes without research usually fail." }
+                ]
+            }
+        ],
+        2: [ // STAGE 2: DEFINE
+            {
+                title: "Stage 2: DEFINE (Focusing the Problem)",
+                scenario: "<strong>Research Findings:</strong> 70% of stream viewers leave because commentary is confusing and match schedules are unpredictable.<br><br>How do you <strong>Define</strong> the core challenge?",
+                options: [
+                    { text: "A) 'Viewers hate our channel and we need a new logo.'", correct: false, pts: 10, feedback: "⚠️ Too vague and ignores the actual research data." },
+                    { text: "B) Create a precise brief: 'How might we improve commentary clarity for new viewers and establish a reliable broadcast schedule?'", correct: true, pts: 10, feedback: "✅ Perfect! Define synthesizes research into an actionable brief and success criteria." },
+                    { text: "C) Start prototyping a mobile app immediately.", correct: false, pts: 10, feedback: "⚠️ You skipped defining the problem statement!" }
+                ]
+            },
+            {
+                title: "Stage 2: DEFINE (Focusing the Problem)",
+                scenario: "<strong>Research Findings:</strong> Fans love the jersey logo, but complain the fabric feels itchy and pricing is 30% higher than rival orgs.<br><br>How do you <strong>Define</strong> the brief?",
+                options: [
+                    { text: "A) 'Scrap the team logo and make a new mascot.'", correct: false, pts: 10, feedback: "⚠️ Research showed fans love the logo! You're solving the wrong problem." },
+                    { text: "B) Design Brief: 'Source breathable, comfortable fabrics while optimizing production costs to lower consumer prices.'", correct: true, pts: 10, feedback: "✅ Spot on! You accurately framed the problem based directly on research." },
+                    { text: "C) 'Tell fans to stop complaining about prices.'", correct: false, pts: 10, feedback: "⚠️ Ignoring customer feedback leads to commercial failure." }
+                ]
+            },
+            {
+                title: "Stage 2: DEFINE (Focusing the Problem)",
+                scenario: "<strong>Research Findings:</strong> Energy drink fans prefer interactive gaming challenges over static promo posts.<br><br>How do you <strong>Define</strong> the challenge?",
+                options: [
+                    { text: "A) Brief: 'Develop an interactive, playable mini-game tournament that rewards fans with product discount codes.'", correct: true, pts: 10, feedback: "✅ Excellent problem definition that directly aligns with user research!" },
+                    { text: "B) 'Post more high-res photos of energy drink cans.'", correct: false, pts: 10, feedback: "⚠️ Fails to address the lack of interactive content identified in research." },
+                    { text: "C) 'Change our sponsor to a shoe brand instead.'", correct: false, pts: 10, feedback: "⚠️ Diverting from the client brief without reason breaks project scope." }
+                ]
+            },
+            {
+                title: "Stage 2: DEFINE (Focusing the Problem)",
+                scenario: "<strong>Research Findings:</strong> Arena fans feel disconnected from the physical mascot during matches because it only stands on stage.<br><br>How do you <strong>Define</strong> the brief?",
+                options: [
+                    { text: "A) Brief: 'Design active crowd-engagement routines and fan photo-ops during match pauses to increase arena interaction.'", correct: true, pts: 10, feedback: "✅ Great framing! Directly targets fan interaction gaps revealed in research." },
+                    { text: "B) 'Fire the mascot performer immediately.'", correct: false, pts: 10, feedback: "⚠️ Blaming staff before defining project goals doesn't solve design gaps." },
+                    { text: "C) 'Make the mascot costume 2 meters taller.'", correct: false, pts: 10, feedback: "⚠️ Size isn't the problem—engagement design is!" }
+                ]
+            },
+            {
+                title: "Stage 2: DEFINE (Focusing the Problem)",
+                scenario: "<strong>Research Findings:</strong> YouTube analytics show 60% of viewers leave in the first 15 seconds due to long, boring intro sequences.<br><br>How do you <strong>Define</strong> the brief?",
+                options: [
+                    { text: "A) 'Make the intro sequence twice as long with more explosive audio.'", correct: false, pts: 10, feedback: "⚠️ Long intros are causing drop-off! Making it longer worsens the issue." },
+                    { text: "B) Brief: 'Hook viewers within 5 seconds using fast-paced highlight teasers and streamlined intro branding.'", correct: true, pts: 10, feedback: "✅ Excellent! Directly solves the drop-off issue with data-backed targets." },
+                    { text: "C) 'Disable YouTube comments on all videos.'", correct: false, pts: 10, feedback: "⚠️ Irrelevant action that fails to solve video retention." }
+                ]
+            }
+        ],
+        3: [ // STAGE 3: DEVELOP
+            {
+                title: "Stage 3: DEVELOP (Prototyping & Testing)",
+                scenario: "Now that your commentary & schedule problem is defined, how do you execute <strong>Develop</strong>?",
+                options: [
+                    { text: "A) Brainstorm 5 commentary styles, sketch 3 broadcast overlays, and test a private pilot stream with a focus group.", correct: true, pts: 10, feedback: "✅ Outstanding! Develop emphasizes ideation, sketching, experimentation, and feedback." },
+                    { text: "B) Buy £20,000 in broadcast gear and go live without testing audio levels.", correct: false, pts: 10, feedback: "⚠️ Skipping testing increases technical failure risks." },
+                    { text: "C) Let one manager decide everything without consulting the creative team.", correct: false, pts: 10, feedback: "⚠️ Develop requires collaborative brainstorming and prototyping." }
+                ]
+            },
+            {
+                title: "Stage 3: DEVELOP (Prototyping & Testing)",
+                scenario: "Your team needs to prototype new performance jersey concepts. What is the best <strong>Develop</strong> strategy?",
+                options: [
+                    { text: "A) Order 5,000 jerseys from the very first sketch without testing.", correct: false, pts: 10, feedback: "⚠️ Mass production without sample testing is risky and expensive!" },
+                    { text: "B) Sketch 10 design variations, order 3 sample fabric prototypes, test wash durability, and gather player feedback.", correct: true, pts: 10, feedback: "✅ Brilliant! Develop is all about iterating, prototyping, and testing ideas." },
+                    { text: "C) Copy last year's jersey file and change one color.", correct: false, pts: 10, feedback: "⚠️ Lacks creative experimentation and exploration." }
+                ]
+            },
+            {
+                title: "Stage 3: DEVELOP (Prototyping & Testing)",
+                scenario: "You are building an interactive sponsor mini-game. How do you execute <strong>Develop</strong>?",
+                options: [
+                    { text: "A) Code a quick wireframe prototype, test controls with 20 playtesters, iterate on bug reports, and refine visuals.", correct: true, pts: 10, feedback: "✅ Perfect execution! User testing and iteration refine creative builds." },
+                    { text: "B) Release un-tested code directly to the public.", correct: false, pts: 10, feedback: "⚠️ Un-tested releases damage brand credibility." },
+                    { text: "C) Spend the entire budget on influencer ads before building the game.", correct: false, pts: 10, feedback: "⚠️ Focuses on promotion before validating the actual product." }
+                ]
+            },
+            {
+                title: "Stage 3: DEVELOP (Prototyping & Testing)",
+                scenario: "How do you develop new arena mascot routines before match day?",
+                options: [
+                    { text: "A) Rehearse 4 crowd interaction skits, test prop safety with arena staff, and record video rehearsals for review.", correct: true, pts: 10, feedback: "✅ Great! Prototyping routines and safety checks ensures smooth execution." },
+                    { text: "B) Have the performer improvise live during a sold-out tournament final without practice.", correct: false, pts: 10, feedback: "⚠️ Unrehearsed creative execution risks awkward blunders." },
+                    { text: "C) Cancel the mascot appearance because practicing takes too long.", correct: false, pts: 10, feedback: "⚠️ Giving up during Develop defeats the creative process!" }
+                ]
+            },
+            {
+                title: "Stage 3: DEVELOP (Prototyping & Testing)",
+                scenario: "You are testing new fast-paced intro hooks for YouTube VODs. What is the best Develop method?",
+                options: [
+                    { text: "A) Edit 3 different 5-second intro variations and A/B test them on unlisted preview links with community testers.", correct: true, pts: 10, feedback: "✅ Perfect! A/B testing variations helps select the best creative approach." },
+                    { text: "B) Pick the loudest intro song available and apply it to every video permanently.", correct: false, pts: 10, feedback: "⚠️ Assuming without testing leads to bad viewer experiences." },
+                    { text: "C) Remove intros completely without testing viewer reaction.", correct: false, pts: 10, feedback: "⚠️ Testing alternatives provides evidence before making final cuts." }
+                ]
+            }
+        ],
+        4: [ // STAGE 4: DELIVER
+            {
+                title: "Stage 4: DELIVER (Launch & Evaluation)",
+                scenario: "You are launching the refined broadcast experience. What completes <strong>Deliver</strong>?",
+                options: [
+                    { text: "A) Launch the stream, celebrate, and never look at viewer analytics again.", correct: false, pts: 10, feedback: "⚠️ Deliver includes post-launch evaluation and continuous reflection!" },
+                    { text: "B) Finalize broadcast graphics, go live, track retention analytics, and review fan feedback for future tweaks.", correct: true, pts: 10, feedback: "✅ Fantastic! Deliver combines final rollout with testing, evaluation, and reflection." },
+                    { text: "C) Delete all graphics files so the team starts fresh next month.", correct: false, pts: 10, feedback: "⚠️ Discarding project assets prevents future reference and learning." }
+                ]
+            },
+            {
+                title: "Stage 4: DELIVER (Launch & Evaluation)",
+                scenario: "Your new jersey line is manufactured and ready to hit the web store. What finishes <strong>Deliver</strong>?",
+                options: [
+                    { text: "A) Launch store page, release promo video, track sales conversion rates, and review customer satisfaction surveys.", correct: true, pts: 10, feedback: "✅ Excellent! Full delivery requires polished launch, sales evaluation, and reflection." },
+                    { text: "B) Ship jerseys in plain unmarked plastic bags to save money.", correct: false, pts: 10, feedback: "⚠️ Poor packaging ruins customer experience at the final step!" },
+                    { text: "C) Close the online shop after 1 hour regardless of sales.", correct: false, pts: 10, feedback: "⚠️ Illogical delivery strategy that harms project success." }
+                ]
+            },
+            {
+                title: "Stage 4: DELIVER (Launch & Evaluation)",
+                scenario: "The interactive sponsor mini-game is complete. What is your <strong>Deliver</strong> action plan?",
+                options: [
+                    { text: "A) Hide the game link in a hard-to-find forum post.", correct: false, pts: 10, feedback: "⚠️ Poor delivery prevents your audience from experiencing the final outcome." },
+                    { text: "B) Deploy final game build, launch campaign, present impact report to sponsors, and evaluate player retention.", correct: true, pts: 10, feedback: "✅ Outstanding! Deliver satisfies client requirements and measures success against targets." },
+                    { text: "C) Cancel the campaign minutes before launch.", correct: false, pts: 10, feedback: "⚠️ Wastes all research, design, and prototyping efforts." }
+                ]
+            },
+            {
+                title: "Stage 4: DELIVER (Launch & Evaluation)",
+                scenario: "The mascot performed at the arena tournament. How do you finish the project in <strong>Deliver</strong>?",
+                options: [
+                    { text: "A) Review fan social media clips, evaluate crowd cheer volume data, and conduct a post-event team debrief.", correct: true, pts: 10, feedback: "✅ Perfect! Evaluating real-world impact helps refine future performances." },
+                    { text: "B) Throw away the mascot suit after one match.", correct: false, pts: 10, feedback: "⚠️ Destructive and wasteful!" },
+                    { text: "C) Ignore fan reactions and claim success without proof.", correct: false, pts: 10, feedback: "⚠️ Evaluation requires evidence, not unbacked claims." }
+                ]
+            },
+            {
+                title: "Stage 4: DELIVER (Launch & Evaluation)",
+                scenario: "You published 20 YouTube VODs with the new 5-second intro hooks. What completes <strong>Deliver</strong>?",
+                options: [
+                    { text: "A) Analyze watch-time analytics, compare retention against past VODs, and document lessons learned for future videos.", correct: true, pts: 10, feedback: "✅ Spot on! Data evaluation and reflective documentation conclude the process." },
+                    { text: "B) Stop uploading videos forever because the project is finished.", correct: false, pts: 10, feedback: "⚠️ Creative processes support ongoing continuous improvement." },
+                    { text: "C) Delete low-view videos to make stats look better.", correct: false, pts: 10, feedback: "⚠️ Hiding data prevents genuine learning and improvement." }
+                ]
+            }
+        ]
+    };
+
+    function startTimer() {
+        stopTimer();
+        remainingTime = TIME_LIMIT;
+        isGameActive = true;
+        updateTimerDisplay();
+        
+        timerInterval = setInterval(() => {
+            remainingTime--;
+            updateTimerDisplay();
+            
+            if (remainingTime <= 0) {
+                stopTimer();
+                handleTimeUp();
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        const display = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        const timerDisplayElem = document.getElementById('timerDisplay');
+        const timerBox = document.getElementById('timerBox');
+        
+        if (timerDisplayElem) timerDisplayElem.innerText = display;
+        
+        if (timerBox) {
+            if (remainingTime <= 30 && remainingTime > 0) {
+                timerBox.classList.add('urgent');
+            } else {
+                timerBox.classList.remove('urgent');
+            }
+        }
+    }
+
+    function handleTimeUp() {
+        isGameActive = false;
+        // Disable option buttons on current question
+        const btnList = document.querySelectorAll('.option-btn');
+        btnList.forEach(btn => btn.disabled = true);
+
+        const totalCompleted = ((currentStage - 1) * 5) + currentQuestionIndex;
+        document.getElementById('modalMessage').innerHTML = `You completed <strong>${totalCompleted} / 20</strong> questions with a score of <strong>${score} points</strong> before time ran out.`;
+        document.getElementById('timeOutModal').classList.add('show');
+    }
+
+    function retryGame() {
+        document.getElementById('timeOutModal').classList.remove('show');
+        initGame();
+    }
+
+    function closeModal() {
+        document.getElementById('timeOutModal').classList.remove('show');
+    }
+
+    function initGame() {
+        currentStage = 1;
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('score').innerText = score;
+        
+        // Shuffle questions within each stage pool
+        activeQuestions = {};
+        for (let s = 1; s <= 4; s++) {
+            let pool = JSON.parse(JSON.stringify(questionBank[s]));
+            pool.sort(() => Math.random() - 0.5);
+            pool.forEach(q => q.options.sort(() => Math.random() - 0.5));
+            activeQuestions[s] = pool;
+        }
+
+        renderRandomizedJournalFields();
+        renderStage();
+        startTimer();
+    }
+
+    function renderRandomizedJournalFields() {
+        const stagesInfo = [
+            { id: "discover", name: "Discover Stage", hint: "What happens in Discover? Give examples (e.g., fan surveys, analyzing stats, audience interviews)..." },
+            { id: "define", name: "Define Stage", hint: "What happens in Define? Give examples (e.g., writing a design brief, narrowing down the core issue)..." },
+            { id: "develop", name: "Develop Stage", hint: "What happens in Develop? Give examples (e.g., prototyping jerseys, brainstorming, A/B testing)..." },
+            { id: "deliver", name: "Deliver Stage", hint: "What happens in Deliver? Give examples (e.g., launching broadcast, reviewing engagement data)..." }
+        ];
+
+        stagesInfo.sort(() => Math.random() - 0.5);
+
+        const container = document.getElementById('randomized-stages-container');
+        container.innerHTML = '';
+
+        stagesInfo.forEach(stage => {
+            const div = document.createElement('div');
+            div.className = 'stage-box';
+            div.innerHTML = `
+                <label for="journal-${stage.id}"><strong>• ${stage.name}:</strong></label>
+                <textarea id="journal-${stage.id}" placeholder="${stage.hint}"></textarea>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function renderStage() {
+        const panel = document.getElementById('game-panel');
+        
+        if (currentStage > 4) {
+            stopTimer();
+            panel.innerHTML = `
+                <h2>🏆 Creative Process Mastered!</h2>
+                <p>You completed all 20 challenges across the Double Diamond model in <strong>${formatTimeTaken()}</strong> with a score of <strong>${score} / 200 points</strong>!</p>
+                <p>You have demonstrated strong creative industry decision-making. Now complete your written learning journal below to finish your task.</p>
+                <button class="primary-btn" onclick="initGame()">🔄 Replay Simulation (Reshuffle)</button>
+            `;
+            updateTrackerUI();
+            return;
+        }
+
+        const currentPool = activeQuestions[currentStage];
+        const data = currentPool[currentQuestionIndex];
+
+        let optionsHTML = '';
+        data.options.forEach((opt, idx) => {
+            optionsHTML += `<button class="option-btn" id="opt-btn-${idx}" onclick="selectOption(${idx})">${opt.text}</button>`;
+        });
+
+        panel.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>${data.title}</h3>
+                <span style="font-size: 0.9rem; color: var(--accent-color);">Question ${currentQuestionIndex + 1} of 5</span>
+            </div>
+            <p>${data.scenario}</p>
+            <div>${optionsHTML}</div>
+            <div id="feedback" class="feedback-text"></div>
+        `;
+
+        updateTrackerUI();
+    }
+
+    function formatTimeTaken() {
+        const timeTaken = TIME_LIMIT - remainingTime;
+        const m = Math.floor(timeTaken / 60);
+        const s = timeTaken % 60;
+        return `${m}m ${s}s`;
+    }
+
+    function selectOption(index) {
+        if (!isGameActive) return;
+
+        const currentPool = activeQuestions[currentStage];
+        const data = currentPool[currentQuestionIndex];
+        const selected = data.options[index];
+        const feedbackElem = document.getElementById('feedback');
+
+        feedbackElem.style.display = 'block';
+        
+        if (selected.correct) {
+            score += selected.pts;
+            document.getElementById('score').innerText = score;
+            feedbackElem.className = 'feedback-text feedback-success';
+            
+            // Disable all option buttons once correct answer is chosen
+            const btnList = document.querySelectorAll('.option-btn');
+            btnList.forEach(btn => btn.disabled = true);
+
+            let btnText = (currentQuestionIndex < 4) ? "Next Question ➔" : "Advance to Next Stage ➔";
+            feedbackElem.innerHTML = `${selected.feedback}<br><br><button class="primary-btn" onclick="nextQuestion()">${btnText}</button>`;
+        } else {
+            // Deduct 1 point penalty for incorrect answer[cite: 1]
+            score = Math.max(0, score - 1);
+            document.getElementById('score').innerText = score;
+            feedbackElem.className = 'feedback-text feedback-warning';
+
+            // Disable the clicked incorrect option
+            const clickedBtn = document.getElementById(`opt-btn-${index}`);
+            if (clickedBtn) clickedBtn.disabled = true;
+
+            feedbackElem.innerHTML = `❌ Incorrect (-1 point penalty). ${selected.feedback}<br><small>Try another option to proceed.</small>`;
+        }
+    }
+
+    function nextQuestion() {
+        if (!isGameActive) return;
+
+        if (currentQuestionIndex < 4) {
+            currentQuestionIndex++;
+        } else {
+            currentStage++;
+            currentQuestionIndex = 0;
+        }
+        renderStage();
+    }
+
+    function updateTrackerUI() {
+        for (let i = 1; i <= 4; i++) {
+            const card = document.getElementById(`card-stage-${i}`);
+            const prog = document.getElementById(`prog-${i}`);
+            card.classList.remove('active', 'completed');
+
+            if (i < currentStage) {
+                card.classList.add('completed');
+                prog.innerText = "5/5 Done ✅";
+            } else if (i === currentStage) {
+                card.classList.add('active');
+                prog.innerText = `${currentQuestionIndex}/5 Done`;
+            } else {
+                prog.innerText = "0/5 Done";
+            }
+        }
+
+        let totalCompleted = ((currentStage - 1) * 5) + currentQuestionIndex;
+        if (currentStage > 4) totalCompleted = 20;
+        const totalPercent = (totalCompleted / 20) * 100;
+        document.getElementById('total-progress').style.width = totalPercent + '%';
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
