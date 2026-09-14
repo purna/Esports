@@ -383,52 +383,52 @@
     let timerInterval = null;
     let isGameActive = false;
 
-    // Question Bank
+    // Question Bank - Rebalanced lengths for options so the correct answer is not always the longest
     const questionBank = {
         1: [ // STAGE 1: DISCOVER
             {
                 title: "Stage 1: DISCOVER (Research & Insights)",
                 scenario: "<strong>Scenario 1.1 (Broadcast Drop):</strong> Stream engagement dropped by 40% last month. What is your first research step?",
                 options: [
-                    { text: "A) Redesign the entire stream overlay immediately because it looks old.", correct: false, pts: 10, feedback: "⚠️ Jumped straight to solutions! In Discover, gather evidence before designing." },
-                    { text: "B) Interview viewers, analyze watch-time data, observe chat behavior, and survey fans.", correct: true, pts: 10, feedback: "✅ Excellent! Discover focuses on user research, observation, and gathering insights." },
-                    { text: "C) Cut the broadcast budget in half to save money.", correct: false, pts: 10, feedback: "⚠️ Making budget cuts without research ignores the root problem." }
+                    { text: "A) Immediately commission a complete overhaul of all broadcast motion graphics and overlay components across all social channels.", correct: false, pts: 10, feedback: "⚠️ Jumped straight to solutions! In Discover, gather evidence before designing." },
+                    { text: "B) Interview viewers, review chat logs, and check watch-time data.", correct: true, pts: 10, feedback: "✅ Excellent! Discover focuses on user research, observation, and gathering insights." },
+                    { text: "C) Immediately cut the broadcast production budget in half to minimize overall financial risk and compensate for loss.", correct: false, pts: 10, feedback: "⚠️ Making budget cuts without research ignores the root problem." }
                 ]
             },
             {
                 title: "Stage 1: DISCOVER (Research & Insights)",
                 scenario: "<strong>Scenario 1.2 (Jersey Sales):</strong> Your esports team's jersey sales are failing. How do you start the project?",
                 options: [
-                    { text: "A) Immediately order 1,000 neon green jerseys because neon is popular on TikTok.", correct: false, pts: 10, feedback: "⚠️ You assumed what fans want without checking. Research first!" },
-                    { text: "B) Collect mood boards, research rival org merch, survey fans on sizing/fabric preferences, and audit sales data.", correct: true, pts: 10, feedback: "✅ Perfect! Discover requires studying target users, market trends, and existing data." },
-                    { text: "C) Blame the players' tournament losses for poor sales.", correct: false, pts: 10, feedback: "⚠️ Deflecting responsibility instead of doing creative research won't build a better product." }
+                    { text: "A) Survey fan preferences, audit sales metrics, and review rival merch trends.", correct: true, pts: 10, feedback: "✅ Perfect! Discover requires studying target users, market trends, and existing data." },
+                    { text: "B) Immediately place a factory order for 2,000 bright neon green hoodies because neon fashion trends are currently going viral online.", correct: false, pts: 10, feedback: "⚠️ You assumed what fans want without checking. Research first!" },
+                    { text: "C) Issue an official statement publicly blaming recent tournament results and player performances for the dip in merchandise interest.", correct: false, pts: 10, feedback: "⚠️ Deflecting responsibility instead of doing creative research won't build a better product." }
                 ]
             },
             {
                 title: "Stage 1: DISCOVER (Research & Insights)",
                 scenario: "<strong>Scenario 1.3 (Sponsor Campaign):</strong> An energy drink brand wants a social media campaign, but you don't know what content to create. What do you do?",
                 options: [
-                    { text: "A) Force pro players to post 20 daily banner ads on Twitter.", correct: false, pts: 10, feedback: "⚠️ Generic spam annoys fans and skips user research." },
-                    { text: "B) Analyze audience demographics, track past high-performing posts, and study rival sponsor activations.", correct: true, pts: 10, feedback: "✅ Great choice! Gathering user data and analyzing industry benchmarks ensures data-driven ideas." },
-                    { text: "C) Copy another esports team's campaign exact word for word.", correct: false, pts: 10, feedback: "⚠️ Copying ignores your specific audience's unique interests." }
+                    { text: "A) Require all contracted pro players to post twenty identical banner advertisements across their personal Twitter feeds daily.", correct: false, pts: 10, feedback: "⚠️ Generic spam annoys fans and skips user research." },
+                    { text: "B) Analyze audience data and past top posts.", correct: true, pts: 10, feedback: "✅ Great choice! Gathering user data and analyzing industry benchmarks ensures data-driven ideas." },
+                    { text: "C) Directly copy every element of a rival team's existing sponsorship activation down to the exact wording and visual assets.", correct: false, pts: 10, feedback: "⚠️ Copying ignores your specific audience's unique interests." }
                 ]
             },
             {
                 title: "Stage 1: DISCOVER (Research & Insights)",
                 scenario: "<strong>Scenario 1.4 (Arena Mascot):</strong> Your arena wants to launch a physical mascot. How do you gather ideas during Discover?",
                 options: [
-                    { text: "A) Ask local fan groups for feedback, observe crowd reactions during matches, and research famous sports mascots.", correct: true, pts: 10, feedback: "✅ Spot on! Discover uses qualitative interviews and competitor analysis to inspire ideas." },
-                    { text: "B) Pick your personal favorite animal without asking anyone.", correct: false, pts: 10, feedback: "⚠️ Creative decisions must be user-centred, not purely personal preference." },
-                    { text: "C) Buy a cheap costume online and hope fans like it.", correct: false, pts: 10, feedback: "⚠️ Skipping research risks wasting budget on a mascot fans won't connect with." }
+                    { text: "A) Collect fan feedback and observe crowd reactions.", correct: true, pts: 10, feedback: "✅ Spot on! Discover uses qualitative interviews and competitor analysis to inspire ideas." },
+                    { text: "B) Select your own favorite childhood mythical animal without consulting staff, fans, focus groups, or arena stakeholders.", correct: false, pts: 10, feedback: "⚠️ Creative decisions must be user-centred, not purely personal preference." },
+                    { text: "C) Purchase an off-the-shelf novelty suit from an online retailer and hope the arena attendees respond positively to it.", correct: false, pts: 10, feedback: "⚠️ Skipping research risks wasting budget on a mascot fans won't connect with." }
                 ]
             },
             {
                 title: "Stage 1: DISCOVER (Research & Insights)",
                 scenario: "<strong>Scenario 1.5 (YouTube Content):</strong> Views on your team's YouTube VODs are declining. What is the proper Discover action?",
                 options: [
-                    { text: "A) Post 10 videos a day to force algorithm traffic.", correct: false, pts: 10, feedback: "⚠️ Quantity doesn't solve poor audience fit—gather insights first!" },
-                    { text: "B) Review video analytics (drop-off times), audit thumbnail click-through rates, and run a community poll.", correct: true, pts: 10, feedback: "✅ Perfect! Data audits and community surveys form strong Discover research." },
-                    { text: "C) Delete the YouTube channel and move to Facebook.", correct: false, pts: 10, feedback: "⚠️ Drastic changes without research usually fail." }
+                    { text: "A) Upload ten unedited videos every single day to brute-force the algorithm into driving additional traffic.", correct: false, pts: 10, feedback: "⚠️ Quantity doesn't solve poor audience fit—gather insights first!" },
+                    { text: "B) Review drop-off analytics and poll the community.", correct: true, pts: 10, feedback: "✅ Perfect! Data audits and community surveys form strong Discover research." },
+                    { text: "C) Completely delete the current channel without warning and transfer all video distribution efforts over to an unproven platform.", correct: false, pts: 10, feedback: "⚠️ Drastic changes without research usually fail." }
                 ]
             }
         ],
@@ -437,45 +437,45 @@
                 title: "Stage 2: DEFINE (Focusing the Problem)",
                 scenario: "<strong>Research Findings:</strong> 70% of stream viewers leave because commentary is confusing and match schedules are unpredictable.<br><br>How do you <strong>Define</strong> the core challenge?",
                 options: [
-                    { text: "A) 'Viewers hate our channel and we need a new logo.'", correct: false, pts: 10, feedback: "⚠️ Too vague and ignores the actual research data." },
-                    { text: "B) Create a precise brief: 'How might we improve commentary clarity for new viewers and establish a reliable broadcast schedule?'", correct: true, pts: 10, feedback: "✅ Perfect! Define synthesizes research into an actionable brief and success criteria." },
-                    { text: "C) Start prototyping a mobile app immediately.", correct: false, pts: 10, feedback: "⚠️ You skipped defining the problem statement!" }
+                    { text: "A) Assume viewers dislike the brand aesthetic and initiate a high-budget rebrand across all digital channels.", correct: false, pts: 10, feedback: "⚠️ Too vague and ignores the actual research data." },
+                    { text: "B) Write a brief focused on clear commentary and fixed schedules.", correct: true, pts: 10, feedback: "✅ Perfect! Define synthesizes research into an actionable brief and success criteria." },
+                    { text: "C) Immediately hire external software engineers to begin developing a standalone custom mobile streaming application from scratch.", correct: false, pts: 10, feedback: "⚠️ You skipped defining the problem statement!" }
                 ]
             },
             {
                 title: "Stage 2: DEFINE (Focusing the Problem)",
                 scenario: "<strong>Research Findings:</strong> Fans love the jersey logo, but complain the fabric feels itchy and pricing is 30% higher than rival orgs.<br><br>How do you <strong>Define</strong> the brief?",
                 options: [
-                    { text: "A) 'Scrap the team logo and make a new mascot.'", correct: false, pts: 10, feedback: "⚠️ Research showed fans love the logo! You're solving the wrong problem." },
-                    { text: "B) Design Brief: 'Source breathable, comfortable fabrics while optimizing production costs to lower consumer prices.'", correct: true, pts: 10, feedback: "✅ Spot on! You accurately framed the problem based directly on research." },
-                    { text: "C) 'Tell fans to stop complaining about prices.'", correct: false, pts: 10, feedback: "⚠️ Ignoring customer feedback leads to commercial failure." }
+                    { text: "A) Scrap the core logo and design a new mascot brand icon.", correct: false, pts: 10, feedback: "⚠️ Research showed fans love the logo! You're solving the wrong problem." },
+                    { text: "B) Frame the goal: Source breathable fabrics and lower retail prices.", correct: true, pts: 10, feedback: "✅ Spot on! You accurately framed the problem based directly on research." },
+                    { text: "C) Publish a press release explaining that premium pricing and traditional fabric choices will remain unchanged despite complaints.", correct: false, pts: 10, feedback: "⚠️ Ignoring customer feedback leads to commercial failure." }
                 ]
             },
             {
                 title: "Stage 2: DEFINE (Focusing the Problem)",
                 scenario: "<strong>Research Findings:</strong> Energy drink fans prefer interactive gaming challenges over static promo posts.<br><br>How do you <strong>Define</strong> the challenge?",
                 options: [
-                    { text: "A) Brief: 'Develop an interactive, playable mini-game tournament that rewards fans with product discount codes.'", correct: true, pts: 10, feedback: "✅ Excellent problem definition that directly aligns with user research!" },
-                    { text: "B) 'Post more high-res photos of energy drink cans.'", correct: false, pts: 10, feedback: "⚠️ Fails to address the lack of interactive content identified in research." },
-                    { text: "C) 'Change our sponsor to a shoe brand instead.'", correct: false, pts: 10, feedback: "⚠️ Diverting from the client brief without reason breaks project scope." }
+                    { text: "A) Define a brief for a playable fan tournament with prize codes.", correct: true, pts: 10, feedback: "✅ Excellent problem definition that directly aligns with user research!" },
+                    { text: "B) Instruct the graphics department to increase the saturation and contrast on all product photo posts by twenty percent.", correct: false, pts: 10, feedback: "⚠️ Fails to address the lack of interactive content identified in research." },
+                    { text: "C) Terminate the existing energy drink partnership immediately and seek out a footwear sponsor without consulting management.", correct: false, pts: 10, feedback: "⚠️ Diverting from the client brief without reason breaks project scope." }
                 ]
             },
             {
                 title: "Stage 2: DEFINE (Focusing the Problem)",
                 scenario: "<strong>Research Findings:</strong> Arena fans feel disconnected from the physical mascot during matches because it only stands on stage.<br><br>How do you <strong>Define</strong> the brief?",
                 options: [
-                    { text: "A) Brief: 'Design active crowd-engagement routines and fan photo-ops during match pauses to increase arena interaction.'", correct: true, pts: 10, feedback: "✅ Great framing! Directly targets fan interaction gaps revealed in research." },
-                    { text: "B) 'Fire the mascot performer immediately.'", correct: false, pts: 10, feedback: "⚠️ Blaming staff before defining project goals doesn't solve design gaps." },
-                    { text: "C) 'Make the mascot costume 2 meters taller.'", correct: false, pts: 10, feedback: "⚠️ Size isn't the problem—engagement design is!" }
+                    { text: "A) Set targets for active arena interaction and fan photo ops.", correct: true, pts: 10, feedback: "✅ Great framing! Directly targets fan interaction gaps revealed in research." },
+                    { text: "B) Terminate the mascot performer's employment contract on the spot before investigating potential choreography changes.", correct: false, pts: 10, feedback: "⚠️ Blaming staff before defining project goals doesn't solve design gaps." },
+                    { text: "C) Instruct the costume design workshop to increase the physical height of the mascot suit by two additional meters.", correct: false, pts: 10, feedback: "⚠️ Size isn't the problem—engagement design is!" }
                 ]
             },
             {
                 title: "Stage 2: DEFINE (Focusing the Problem)",
                 scenario: "<strong>Research Findings:</strong> YouTube analytics show 60% of viewers leave in the first 15 seconds due to long, boring intro sequences.<br><br>How do you <strong>Define</strong> the brief?",
                 options: [
-                    { text: "A) 'Make the intro sequence twice as long with more explosive audio.'", correct: false, pts: 10, feedback: "⚠️ Long intros are causing drop-off! Making it longer worsens the issue." },
-                    { text: "B) Brief: 'Hook viewers within 5 seconds using fast-paced highlight teasers and streamlined intro branding.'", correct: true, pts: 10, feedback: "✅ Excellent! Directly solves the drop-off issue with data-backed targets." },
-                    { text: "C) 'Disable YouTube comments on all videos.'", correct: false, pts: 10, feedback: "⚠️ Irrelevant action that fails to solve video retention." }
+                    { text: "A) Double the length of the intro sequence while adding additional motion blur effects and complex audio overlays.", correct: false, pts: 10, feedback: "⚠️ Long intros are causing drop-off! Making it longer worsens the issue." },
+                    { text: "B) Target a 5-second hook featuring highlight teasers.", correct: true, pts: 10, feedback: "✅ Excellent! Directly solves the drop-off issue with data-backed targets." },
+                    { text: "C) Permanently turn off community comments and public view counts across the entire YouTube channel repository.", correct: false, pts: 10, feedback: "⚠️ Irrelevant action that fails to solve video retention." }
                 ]
             }
         ],
@@ -484,45 +484,45 @@
                 title: "Stage 3: DEVELOP (Prototyping & Testing)",
                 scenario: "Now that your commentary & schedule problem is defined, how do you execute <strong>Develop</strong>?",
                 options: [
-                    { text: "A) Brainstorm 5 commentary styles, sketch 3 broadcast overlays, and test a private pilot stream with a focus group.", correct: true, pts: 10, feedback: "✅ Outstanding! Develop emphasizes ideation, sketching, experimentation, and feedback." },
-                    { text: "B) Buy £20,000 in broadcast gear and go live without testing audio levels.", correct: false, pts: 10, feedback: "⚠️ Skipping testing increases technical failure risks." },
-                    { text: "C) Let one manager decide everything without consulting the creative team.", correct: false, pts: 10, feedback: "⚠️ Develop requires collaborative brainstorming and prototyping." }
+                    { text: "A) Try commentary styles and run test streams with a focus group.", correct: true, pts: 10, feedback: "✅ Outstanding! Develop emphasizes ideation, sketching, experimentation, and feedback." },
+                    { text: "B) Immediately spend £20,000 on high-end broadcast mixing hardware without testing audio levels or software compatibility.", correct: false, pts: 10, feedback: "⚠️ Skipping testing increases technical failure risks." },
+                    { text: "C) Allow a single manager to unilaterally pick the broadcast direction without team input or prototype testing.", correct: false, pts: 10, feedback: "⚠️ Develop requires collaborative brainstorming and prototyping." }
                 ]
             },
             {
                 title: "Stage 3: DEVELOP (Prototyping & Testing)",
                 scenario: "Your team needs to prototype new performance jersey concepts. What is the best <strong>Develop</strong> strategy?",
                 options: [
-                    { text: "A) Order 5,000 jerseys from the very first sketch without testing.", correct: false, pts: 10, feedback: "⚠️ Mass production without sample testing is risky and expensive!" },
-                    { text: "B) Sketch 10 design variations, order 3 sample fabric prototypes, test wash durability, and gather player feedback.", correct: true, pts: 10, feedback: "✅ Brilliant! Develop is all about iterating, prototyping, and testing ideas." },
-                    { text: "C) Copy last year's jersey file and change one color.", correct: false, pts: 10, feedback: "⚠️ Lacks creative experimentation and exploration." }
+                    { text: "A) Place an order for 5,000 finished jersey units based on the very first quick pencil sketch created during the kickoff meeting.", correct: false, pts: 10, feedback: "⚠️ Mass production without sample testing is risky and expensive!" },
+                    { text: "B) Sample fabric prototypes and gather player feedback.", correct: true, pts: 10, feedback: "✅ Brilliant! Develop is all about iterating, prototyping, and testing ideas." },
+                    { text: "C) Take the vector graphics file from last year's merchandise line and simply change a single secondary accent color.", correct: false, pts: 10, feedback: "⚠️ Lacks creative experimentation and exploration." }
                 ]
             },
             {
                 title: "Stage 3: DEVELOP (Prototyping & Testing)",
                 scenario: "You are building an interactive sponsor mini-game. How do you execute <strong>Develop</strong>?",
                 options: [
-                    { text: "A) Code a quick wireframe prototype, test controls with 20 playtesters, iterate on bug reports, and refine visuals.", correct: true, pts: 10, feedback: "✅ Perfect execution! User testing and iteration refine creative builds." },
-                    { text: "B) Release un-tested code directly to the public.", correct: false, pts: 10, feedback: "⚠️ Un-tested releases damage brand credibility." },
-                    { text: "C) Spend the entire budget on influencer ads before building the game.", correct: false, pts: 10, feedback: "⚠️ Focuses on promotion before validating the actual product." }
+                    { text: "A) Build wireframes, test with playtesters, and fix bugs.", correct: true, pts: 10, feedback: "✅ Perfect execution! User testing and iteration refine creative builds." },
+                    { text: "B) Push raw, un-tested code directly to the live production server without running internal quality assurance checks.", correct: false, pts: 10, feedback: "⚠️ Un-tested releases damage brand credibility." },
+                    { text: "C) Commit the entire production budget to paying social media influencers before verifying that the game mechanics actually function.", correct: false, pts: 10, feedback: "⚠️ Focuses on promotion before validating the actual product." }
                 ]
             },
             {
                 title: "Stage 3: DEVELOP (Prototyping & Testing)",
                 scenario: "How do you develop new arena mascot routines before match day?",
                 options: [
-                    { text: "A) Rehearse 4 crowd interaction skits, test prop safety with arena staff, and record video rehearsals for review.", correct: true, pts: 10, feedback: "✅ Great! Prototyping routines and safety checks ensures smooth execution." },
-                    { text: "B) Have the performer improvise live during a sold-out tournament final without practice.", correct: false, pts: 10, feedback: "⚠️ Unrehearsed creative execution risks awkward blunders." },
-                    { text: "C) Cancel the mascot appearance because practicing takes too long.", correct: false, pts: 10, feedback: "⚠️ Giving up during Develop defeats the creative process!" }
+                    { text: "A) Practice multiple skits and review video rehearsals.", correct: true, pts: 10, feedback: "✅ Great! Prototyping routines and safety checks ensures smooth execution." },
+                    { text: "B) Force the mascot performer to improvise their entire routine live on stage in front of a sold-out stadium audience.", correct: false, pts: 10, feedback: "⚠️ Unrehearsed creative execution risks awkward blunders." },
+                    { text: "C) Cancel all mascot appearances permanently because setting aside time for weekly stage rehearsals is inconvenient.", correct: false, pts: 10, feedback: "⚠️ Giving up during Develop defeats the creative process!" }
                 ]
             },
             {
                 title: "Stage 3: DEVELOP (Prototyping & Testing)",
                 scenario: "You are testing new fast-paced intro hooks for YouTube VODs. What is the best Develop method?",
                 options: [
-                    { text: "A) Edit 3 different 5-second intro variations and A/B test them on unlisted preview links with community testers.", correct: true, pts: 10, feedback: "✅ Perfect! A/B testing variations helps select the best creative approach." },
-                    { text: "B) Pick the loudest intro song available and apply it to every video permanently.", correct: false, pts: 10, feedback: "⚠️ Assuming without testing leads to bad viewer experiences." },
-                    { text: "C) Remove intros completely without testing viewer reaction.", correct: false, pts: 10, feedback: "⚠️ Testing alternatives provides evidence before making final cuts." }
+                    { text: "A) Edit short intro options and test them with community panels.", correct: true, pts: 10, feedback: "✅ Perfect! A/B testing variations helps select the best creative approach." },
+                    { text: "B) Select the loudest royalty-free track available in the library and render it into every upcoming video file indefinitely.", correct: false, pts: 10, feedback: "⚠️ Assuming without testing leads to bad viewer experiences." },
+                    { text: "C) Delete all intro segments across all channel uploads without collecting any preliminary feedback from subscribed users.", correct: false, pts: 10, feedback: "⚠️ Testing alternatives provides evidence before making final cuts." }
                 ]
             }
         ],
@@ -531,45 +531,45 @@
                 title: "Stage 4: DELIVER (Launch & Evaluation)",
                 scenario: "You are launching the refined broadcast experience. What completes <strong>Deliver</strong>?",
                 options: [
-                    { text: "A) Launch the stream, celebrate, and never look at viewer analytics again.", correct: false, pts: 10, feedback: "⚠️ Deliver includes post-launch evaluation and continuous reflection!" },
-                    { text: "B) Finalize broadcast graphics, go live, track retention analytics, and review fan feedback for future tweaks.", correct: true, pts: 10, feedback: "✅ Fantastic! Deliver combines final rollout with testing, evaluation, and reflection." },
-                    { text: "C) Delete all graphics files so the team starts fresh next month.", correct: false, pts: 10, feedback: "⚠️ Discarding project assets prevents future reference and learning." }
+                    { text: "A) Broadcast live, track metrics, and review audience feedback.", correct: true, pts: 10, feedback: "✅ Fantastic! Deliver combines final rollout with testing, evaluation, and reflection." },
+                    { text: "B) Push the new stream graphics live during the broadcast, throw a celebration party, and never check stream performance stats again.", correct: false, pts: 10, feedback: "⚠️ Deliver includes post-launch evaluation and continuous reflection!" },
+                    { text: "C) Delete all core design assets and project master files immediately after the broadcast concludes to save server storage space.", correct: false, pts: 10, feedback: "⚠️ Discarding project assets prevents future reference and learning." }
                 ]
             },
             {
                 title: "Stage 4: DELIVER (Launch & Evaluation)",
                 scenario: "Your new jersey line is manufactured and ready to hit the web store. What finishes <strong>Deliver</strong>?",
                 options: [
-                    { text: "A) Launch store page, release promo video, track sales conversion rates, and review customer satisfaction surveys.", correct: true, pts: 10, feedback: "✅ Excellent! Full delivery requires polished launch, sales evaluation, and reflection." },
-                    { text: "B) Ship jerseys in plain unmarked plastic bags to save money.", correct: false, pts: 10, feedback: "⚠️ Poor packaging ruins customer experience at the final step!" },
-                    { text: "C) Close the online shop after 1 hour regardless of sales.", correct: false, pts: 10, feedback: "⚠️ Illogical delivery strategy that harms project success." }
+                    { text: "A) Launch the store, track conversion rates, and review feedback.", correct: true, pts: 10, feedback: "✅ Excellent! Full delivery requires polished launch, sales evaluation, and reflection." },
+                    { text: "B) Pack and ship all outgoing jersey orders in generic unbranded plastic mailers to cut baseline shipping costs.", correct: false, pts: 10, feedback: "⚠️ Poor packaging ruins customer experience at the final step!" },
+                    { text: "C) Keep the online storefront open for exactly sixty minutes on launch day before shutting down the servers permanently.", correct: false, pts: 10, feedback: "⚠️ Illogical delivery strategy that harms project success." }
                 ]
             },
             {
                 title: "Stage 4: DELIVER (Launch & Evaluation)",
                 scenario: "The interactive sponsor mini-game is complete. What is your <strong>Deliver</strong> action plan?",
                 options: [
-                    { text: "A) Hide the game link in a hard-to-find forum post.", correct: false, pts: 10, feedback: "⚠️ Poor delivery prevents your audience from experiencing the final outcome." },
-                    { text: "B) Deploy final game build, launch campaign, present impact report to sponsors, and evaluate player retention.", correct: true, pts: 10, feedback: "✅ Outstanding! Deliver satisfies client requirements and measures success against targets." },
-                    { text: "C) Cancel the campaign minutes before launch.", correct: false, pts: 10, feedback: "⚠️ Wastes all research, design, and prototyping efforts." }
+                    { text: "A) Post the final game URL exclusively inside a hidden sub-forum thread that requires a paid subscription to access.", correct: false, pts: 10, feedback: "⚠️ Poor delivery prevents your audience from experiencing the final outcome." },
+                    { text: "B) Launch the build, present reports to sponsors, and track retention.", correct: true, pts: 10, feedback: "✅ Outstanding! Deliver satisfies client requirements and measures success against targets." },
+                    { text: "C) Cancel the entire marketing launch five minutes prior to the scheduled release date without informing client stakeholders.", correct: false, pts: 10, feedback: "⚠️ Wastes all research, design, and prototyping efforts." }
                 ]
             },
             {
                 title: "Stage 4: DELIVER (Launch & Evaluation)",
                 scenario: "The mascot performed at the arena tournament. How do you finish the project in <strong>Deliver</strong>?",
                 options: [
-                    { text: "A) Review fan social media clips, evaluate crowd cheer volume data, and conduct a post-event team debrief.", correct: true, pts: 10, feedback: "✅ Perfect! Evaluating real-world impact helps refine future performances." },
-                    { text: "B) Throw away the mascot suit after one match.", correct: false, pts: 10, feedback: "⚠️ Destructive and wasteful!" },
-                    { text: "C) Ignore fan reactions and claim success without proof.", correct: false, pts: 10, feedback: "⚠️ Evaluation requires evidence, not unbacked claims." }
+                    { text: "A) Review fan clips, analyze engagement data, and run a debrief.", correct: true, pts: 10, feedback: "✅ Perfect! Evaluating real-world impact helps refine future performances." },
+                    { text: "B) Dispose of the custom mascot suit in the arena dumpster immediately following the conclusion of the final match.", correct: false, pts: 10, feedback: "⚠️ Destructive and wasteful!" },
+                    { text: "C) Ignore all social media mentions, fan reviews, and attendance feedback while declaring the project an unqualified success.", correct: false, pts: 10, feedback: "⚠️ Evaluation requires evidence, not unbacked claims." }
                 ]
             },
             {
                 title: "Stage 4: DELIVER (Launch & Evaluation)",
                 scenario: "You published 20 YouTube VODs with the new 5-second intro hooks. What completes <strong>Deliver</strong>?",
                 options: [
-                    { text: "A) Analyze watch-time analytics, compare retention against past VODs, and document lessons learned for future videos.", correct: true, pts: 10, feedback: "✅ Spot on! Data evaluation and reflective documentation conclude the process." },
-                    { text: "B) Stop uploading videos forever because the project is finished.", correct: false, pts: 10, feedback: "⚠️ Creative processes support ongoing continuous improvement." },
-                    { text: "C) Delete low-view videos to make stats look better.", correct: false, pts: 10, feedback: "⚠️ Hiding data prevents genuine learning and improvement." }
+                    { text: "A) Compare watch-time retention data against past performance.", correct: true, pts: 10, feedback: "✅ Spot on! Data evaluation and reflective documentation conclude the process." },
+                    { text: "B) Cease uploading any future video content to the platform because the initial twenty-video project commitment is complete.", correct: false, pts: 10, feedback: "⚠️ Creative processes support ongoing continuous improvement." },
+                    { text: "C) Delete any video upload that fails to reach ten thousand views within forty-eight hours to artificially inflate metrics.", correct: false, pts: 10, feedback: "⚠️ Hiding data prevents genuine learning and improvement." }
                 ]
             }
         ]
