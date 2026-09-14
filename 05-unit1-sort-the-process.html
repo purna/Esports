@@ -89,6 +89,30 @@
   }
   .progress-label strong{color:var(--text);}
 
+  .timer{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px 14px;
+    font-family:'Rajdhani',sans-serif;
+  }
+  .timer-label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .timer-value{
+    font-size:18px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    min-width:44px;
+  }
+  .timer.urgent .timer-value{color:var(--bad);}
+
   /* Pipeline */
   .pipeline{
     display:grid;
@@ -312,6 +336,46 @@
     overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
   }
 
+  .modal-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(8,9,14,0.72);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:28px 26px;
+    max-width:380px;
+    width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.45);
+  }
+  .modal-card h2{
+    font-family:'Rajdhani',sans-serif;
+    font-size:26px;
+    font-weight:700;
+    margin:0 0 10px;
+    color:var(--bad);
+  }
+  .modal-card p{
+    font-size:14px;
+    line-height:1.55;
+    color:var(--text);
+    margin:0 0 20px;
+  }
+  .modal-card p strong{color:var(--text);}
+  .modal-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
   footer{
     margin-top:30px;
     color:var(--muted);
@@ -332,6 +396,10 @@
   <div class="status-row">
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <p class="progress-label" id="progressLabel"><strong>0</strong> / 12 placed</p>
+    <div class="timer" id="timerChip">
+      <span class="timer-label">Time left</span>
+      <span class="timer-value" id="timerValue">5:00</span>
+    </div>
   </div>
 
   <div class="pipeline" id="pipeline"></div>
@@ -351,6 +419,17 @@
   </div>
 
   <footer>Esports Careers &amp; Creative Industries · Unit 5 activity</footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalHeading">
+  <div class="modal-card">
+    <h2 id="modalHeading">Time's Up!</h2>
+    <p id="modalScore"></p>
+    <div class="modal-actions">
+      <button class="btn-primary" id="modalTryAgain">Try Again</button>
+      <button class="btn-ghost" id="modalReview">Review Board</button>
+    </div>
+  </div>
 </div>
 
 <div id="liveRegion" class="sr-only" aria-live="polite"></div>
@@ -393,6 +472,66 @@ const resultsHeading = document.getElementById('resultsHeading');
 const resultsScore = document.getElementById('resultsScore');
 const resultsHint = document.getElementById('resultsHint');
 const liveRegion = document.getElementById('liveRegion');
+const timerValueEl = document.getElementById('timerValue');
+const timerChip = document.getElementById('timerChip');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalScore = document.getElementById('modalScore');
+const modalTryAgain = document.getElementById('modalTryAgain');
+const modalReview = document.getElementById('modalReview');
+
+const TIME_LIMIT = 300; // 5 minutes
+let remainingTime = TIME_LIMIT;
+let timerInterval = null;
+
+function formatTime(sec){
+  const m = Math.floor(sec/60);
+  const s = sec%60;
+  return m + ':' + String(s).padStart(2,'0');
+}
+
+function updateTimerDisplay(){
+  timerValueEl.textContent = formatTime(Math.max(remainingTime,0));
+  timerChip.classList.toggle('urgent', remainingTime <= 30 && remainingTime > 0);
+}
+
+function startTimer(){
+  stopTimer();
+  remainingTime = TIME_LIMIT;
+  updateTimerDisplay();
+  timerInterval = setInterval(()=>{
+    remainingTime--;
+    updateTimerDisplay();
+    if(remainingTime <= 0){
+      stopTimer();
+      onTimeUp();
+    }
+  }, 1000);
+}
+
+function stopTimer(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+}
+
+function onTimeUp(){
+  checked = true;
+  pickedCardId = null;
+  render();
+  const correct = CARDS.filter(c=>placements[c.id]===c.stage).length;
+  const placedCount = Object.keys(placements).length;
+  modalScore.innerHTML = `You had <strong>${placedCount} / 12</strong> cards placed, and <strong>${correct} / 12</strong> correct overall. Close this to see which cards were right or wrong.`;
+  modalOverlay.classList.add('show');
+  liveRegion.textContent = "Time's up. Game over.";
+  checkBtn.disabled = true;
+  modalTryAgain.focus();
+}
+
+modalTryAgain.addEventListener('click', ()=>{
+  modalOverlay.classList.remove('show');
+  reset();
+});
+modalReview.addEventListener('click', ()=>{
+  modalOverlay.classList.remove('show');
+});
 
 function shuffledOrder(){
   const arr = CARDS.map(c=>c.id);
@@ -425,14 +564,14 @@ function buildPipeline(){
 
     const dz = wrap.querySelector('.stage-drop');
     dz.addEventListener('click', ()=>{
-      if(pickedCardId !== null){
+      if(!checked && pickedCardId !== null){
         placeCard(pickedCardId, st.id);
       }
     });
     dz.tabIndex = 0;
     dz.setAttribute('role','button');
     dz.addEventListener('keydown', e=>{
-      if((e.key==='Enter'||e.key===' ') && pickedCardId!==null){
+      if((e.key==='Enter'||e.key===' ') && !checked && pickedCardId!==null){
         e.preventDefault();
         placeCard(pickedCardId, st.id);
       }
@@ -643,7 +782,9 @@ function render(){
 }
 
 function checkAnswers(){
+  stopTimer();
   checked = true;
+  pickedCardId = null;
   let correct = 0;
   CARDS.forEach(c=>{ if(placements[c.id] === c.stage) correct++; });
   render();
@@ -664,7 +805,9 @@ function reset(){
   checked = false;
   order = shuffledOrder();
   resultsEl.classList.remove('show');
+  modalOverlay.classList.remove('show');
   render();
+  startTimer();
 }
 
 checkBtn.addEventListener('click', checkAnswers);
@@ -672,6 +815,7 @@ resetBtn.addEventListener('click', reset);
 
 buildPipeline();
 render();
+startTimer();
 </script>
 </body>
 </html>
