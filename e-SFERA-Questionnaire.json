@@ -1,99 +1,156 @@
 [
   {
-    "key": "MAS",
-    "title": "Mastery",
+    "key": "SYN",
+    "title": "Synchrony",
     "items": [
-      { "id": 1, "text": "master a new skill in my sport." },
-      { "id": 2, "text": "improve my performance on a skill." },
-      { "id": 3, "text": "improve my skills." },
-      { "id": 4, "text": "increase the number of skills I can perform." },
-      { "id": 5, "text": "develop new skills and improve." }
+      {
+        "id": "Sync_1",
+        "text": "My thinking was completely focused on the action."
+      },
+      {
+        "id": "Sync_2",
+        "text": "I easily perceived information from the game context."
+      },
+      {
+        "id": "Sync_3",
+        "text": "Thoughts and actions coincided."
+      },
+      {
+        "id": "Sync_4",
+        "text": "I was fully immersed in the exact moment."
+      },
+      {
+        "id": "Sync_5",
+        "text": "I felt I had everything under control."
+      },
+      {
+        "id": "Sync_6",
+        "text": "I was completely detached from external distractions."
+      },
+      {
+        "id": "Sync_7",
+        "text": "I was execution-oriented without overthinking."
+      },
+      {
+        "id": "Sync_8",
+        "text": "My physical response reacted exactly to what I saw."
+      },
+      {
+        "id": "Sync_9",
+        "text": "I was focused only on the immediate scenario."
+      },
+      {
+        "id": "Sync_10",
+        "text": "I maintained focus seamlessly from one action to the next."
+      },
+      {
+        "id": "Sync_11",
+        "text": "I knew exactly what step to take next without pausing."
+      },
+      {
+        "id": "Sync_12",
+        "text": "I executed mechanics automatically."
+      }
     ]
   },
   {
-    "key": "DEM",
-    "title": "Demonstration of Ability",
+    "key": "STR",
+    "title": "Strength",
     "items": [
-      { "id": 6, "text": "win." },
-      { "id": 7, "text": "demonstrate I am better than others." },
-      { "id": 8, "text": "show ability by winning or placing." },
-      { "id": 9, "text": "know I can outperform others." },
-      { "id": 10, "text": "prove I am better than opponents." },
-      { "id": 11, "text": "show I am one of the best." }
+      {
+        "id": "Stren_1",
+        "text": "I was confident in my abilities."
+      },
+      {
+        "id": "Stren_2",
+        "text": "I felt secure in my mechanical/technical skills."
+      },
+      {
+        "id": "Stren_3",
+        "text": "I knew exactly what my strengths were in that match."
+      },
+      {
+        "id": "Stren_4",
+        "text": "I was fully aware of my competitive potential."
+      },
+      {
+        "id": "Stren_5",
+        "text": "I trusted my strategic choices completely."
+      },
+      {
+        "id": "Stren_6",
+        "text": "I felt capable of overcoming any match obstacle."
+      }
     ]
   },
   {
-    "key": "PREP",
-    "title": "Physical & Mental Preparation",
+    "key": "ENE",
+    "title": "Energy",
     "items": [
-      { "id": 12, "text": "keep my focus on the task." },
-      { "id": 13, "text": "psych myself up." },
-      { "id": 14, "text": "know I am mentally prepared." },
-      { "id": 15, "text": "stay focused on my goals." },
-      { "id": 16, "text": "prepare myself physically and mentally." },
-      { "id": 17, "text": "believe in my ability to give maximum effort." }
+      {
+        "id": "Ener_1",
+        "text": "I knew how much physical energy I had been using."
+      },
+      {
+        "id": "Ener_2",
+        "text": "I was managing my mental fatigue successfully."
+      },
+      {
+        "id": "Ener_3",
+        "text": "I preserved enough energy for critical match turning points."
+      },
+      {
+        "id": "Ener_4",
+        "text": "I felt my stress levels were perfectly regulated."
+      }
     ]
   },
   {
-    "key": "PHY",
-    "title": "Physical Self-Presentation",
+    "key": "RHY",
+    "title": "Rhythm",
     "items": [
-      { "id": 18, "text": "feel good about my weight." },
-      { "id": 19, "text": "feel I look good." },
-      { "id": 20, "text": "feel my body looks good." }
+      {
+        "id": "Rhyth_1",
+        "text": "I proceeded without hesitation."
+      },
+      {
+        "id": "Rhyth_2",
+        "text": "My actions followed a natural, fluid sequence."
+      },
+      {
+        "id": "Rhyth_3",
+        "text": "I executed inputs at the optimal speed."
+      },
+      {
+        "id": "Rhyth_4",
+        "text": "I maintained a steady cadence despite pressure."
+      }
     ]
   },
   {
-    "key": "SOC",
-    "title": "Social Support",
+    "key": "ACT",
+    "title": "Activation",
     "items": [
-      { "id": 21, "text": "get positive feedback from teammates." },
-      { "id": 22, "text": "know I have support from others." },
-      { "id": 23, "text": "am told others believe in me." },
-      { "id": 24, "text": "am encouraged by coaches and family." },
-      { "id": 25, "text": "get positive feedback from coaches." },
-      { "id": 26, "text": "receive support and encouragement." }
-    ]
-  },
-  {
-    "key": "COA",
-    "title": "Coach's Leadership",
-    "items": [
-      { "id": 27, "text": "believe in my coach's abilities." },
-      { "id": 28, "text": "know coach will make good decisions." },
-      { "id": 29, "text": "know coach is a good leader." },
-      { "id": 30, "text": "trust in coach's decisions." },
-      { "id": 31, "text": "feel coach provides good leadership." }
-    ]
-  },
-  {
-    "key": "VIC",
-    "title": "Vicarious Experience",
-    "items": [
-      { "id": 32, "text": "see successful performances." },
-      { "id": 33, "text": "watch another athlete perform well." },
-      { "id": 34, "text": "watch a teammate perform well." },
-      { "id": 35, "text": "see a friend perform successfully." },
-      { "id": 36, "text": "watch teammates at my level." }
-    ]
-  },
-  {
-    "key": "ENV",
-    "title": "Environmental Comfort",
-    "items": [
-      { "id": 37, "text": "perform in an environment I like." },
-      { "id": 38, "text": "follow certain rituals." },
-      { "id": 39, "text": "feel comfortable in an environment." },
-      { "id": 40, "text": "like the environment I'm performing in." }
-    ]
-  },
-  {
-    "key": "SIT",
-    "title": "Situational Favorability",
-    "items": [
-      { "id": 41, "text": "get breaks from officials." },
-      { "id": 42, "text": "see breaks going my way." },
-      { "id": 43, "text": "feel everything is going right." }
+      {
+        "id": "Acti_1",
+        "text": "I felt a strong inner drive to win."
+      },
+      {
+        "id": "Acti_2",
+        "text": "My emotional response fueled my determination."
+      },
+      {
+        "id": "Acti_3",
+        "text": "I felt fully engaged and excited by the challenge."
+      },
+      {
+        "id": "Acti_4",
+        "text": "I was motivated by absolute enjoyment of the competition."
+      },
+      {
+        "id": "Acti_5",
+        "text": "I felt an intense alignment between my desire and my actions."
+      }
     ]
   }
 ]

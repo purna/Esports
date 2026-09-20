@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sources of Sport-Confidence Questionnaire (SSCQ)</title>
+    <title>e-S.F.E.R.A. Mental Performance Questionnaire</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -302,8 +302,8 @@
 <body>
 
     <div class="container">
-        <h1>Sources of Sport-Confidence (SSCQ)</h1>
-        <p class="subtitle">I usually gain self-confidence in my sport when I...</p>
+        <h1>e-S.F.E.R.A. Questionnaire</h1>
+        <p class="subtitle">During the match I am thinking about...</p>
 
         <div id="loading-msg">Loading questionnaire sections from JSON...</div>
 
@@ -312,8 +312,8 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             <div class="step-indicator" id="step-indicator">
-                <span>Section <span id="current-step-num">1</span> of <span id="total-steps-num">9</span></span>
-                <span id="current-section-title">Mastery</span>
+                <span>Section <span id="current-step-num">1</span> of <span id="total-steps-num">5</span></span>
+                <span id="current-section-title">Synchrony</span>
             </div>
 
             <form id="quiz-form">
@@ -331,7 +331,7 @@
         </div>
 
         <div id="results-container">
-            <h2 style="text-align: center; color: var(--accent);">Your Confidence Source Profile</h2>
+            <h2 style="text-align: center; color: var(--accent);">Your Mental Factor Profile</h2>
 
             <div class="export-bar">
                 <button type="button" class="btn-action" onclick="copyTableData()">📋 Copy Data for Google
@@ -357,7 +357,6 @@
         let currentChart = null;
         let lastCalculatedAverages = {};
 
-        // Asynchronously load questions from sscq_questions.json
         async function loadQuestionsJSON() {
             try {
                 const response = await fetch('e-SFERA-Questionnaire.json');
@@ -373,9 +372,9 @@
                 renderWizard();
             } catch (error) {
                 document.getElementById("loading-msg").innerHTML = `
-            <span style="color: #ef4444;">Failed to load questions from <code>sscq_questions.json</code>.</span><br>
-            <small>Make sure you are serving this page via a local web server (e.g. Live Server / Python HTTP server).</small>
-        `;
+                    <span style="color: #ef4444;">Failed to load questions from <code>e-SFERA-Questionnaire.json</code>.</span><br>
+                    <small>Make sure you are serving this page via a local web server (e.g. Live Server / Python HTTP server).</small>
+                `;
                 console.error("Error loading JSON:", error);
             }
         }
@@ -387,48 +386,46 @@
             scoresGrid.innerHTML = "";
 
             sections.forEach((sec, sIdx) => {
-                // Build Wizard Step
                 const stepDiv = document.createElement("div");
                 stepDiv.className = `wizard-step ${sIdx === 0 ? 'active' : ''}`;
                 stepDiv.id = `step-${sIdx}`;
 
                 let stepHtml = `
-            <div class="section-header">
-                <span>${sec.title}</span>
-                <span class="item-count">${sec.items.length} Questions</span>
-            </div>
-        `;
+                    <div class="section-header">
+                        <span>${sec.title}</span>
+                        <span class="item-count">${sec.items.length} Questions</span>
+                    </div>
+                `;
 
                 sec.items.forEach((item) => {
                     let optionsHtml = `
-                <div class="scale-legend">
-                    <span class="left-anchor">1 = Not at all important</span>
-                    <span class="right-anchor">7 = Of highest importance</span>
-                </div>
-                <div class="likert-options">
-            `;
-                    for (let v = 1; v <= 7; v++) {
+                        <div class="scale-legend">
+                            <span class="left-anchor">1 = Completely disagree</span>
+                            <span class="right-anchor">5 = Completely agree</span>
+                        </div>
+                        <div class="likert-options">
+                    `;
+                    for (let v = 1; v <= 5; v++) {
                         optionsHtml += `
-                    <div class="likert-option">
-                        <input type="radio" id="item_${item.id}_${v}" name="item_${item.id}" value="${v}" ${v === 4 ? 'checked' : ''}>
-                        <label for="item_${item.id}_${v}">${v}</label>
-                    </div>
-                `;
+                            <div class="likert-option">
+                                <input type="radio" id="item_${item.id}_${v}" name="item_${item.id}" value="${v}" ${v === 3 ? 'checked' : ''}>
+                                <label for="item_${item.id}_${v}">${v}</label>
+                            </div>
+                        `;
                     }
                     optionsHtml += `</div>`;
 
                     stepHtml += `
-                <div class="item-card">
-                    <div class="item-statement"><strong>${item.id}.</strong> ${item.text}</div>
-                    ${optionsHtml}
-                </div>
-            `;
+                        <div class="item-card">
+                            <div class="item-statement"><strong>${item.id}:</strong> "${item.text}"</div>
+                            ${optionsHtml}
+                        </div>
+                    `;
                 });
 
                 stepDiv.innerHTML = stepHtml;
                 wrapper.appendChild(stepDiv);
 
-                // Build Results Grid Card dynamically
                 const card = document.createElement("div");
                 card.className = "score-card";
                 card.innerHTML = `<div class="val" id="score-${sec.key}">-</div><div class="label">${sec.title}</div>`;
@@ -497,7 +494,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Source Importance Score (1-7)',
+                        label: 'S.F.E.R.A. Factor Score (1-5)',
                         data: dataVals,
                         backgroundColor: 'rgba(99, 102, 241, 0.25)',
                         borderColor: '#6366f1',
@@ -509,10 +506,9 @@
                         r: {
                             suggestedMin: 1,
                             suggestedMax: 5,
-                            suggestedMax: 7,
                             ticks: { stepSize: 1, color: '#94a3b8', backdropColor: 'transparent' },
                             grid: { color: '#334155' },
-                            pointLabels: { color: '#f8fafc', font: { size: 11 } }
+                            pointLabels: { color: '#f8fafc', font: { size: 12 } }
                         }
                     },
                     plugins: { legend: { labels: { color: '#f8fafc' } } }
@@ -521,7 +517,7 @@
         }
 
         function copyTableData() {
-            let tsvContent = "Subscale\tAverage Score\n";
+            let tsvContent = "Factor\tAverage Score\n";
             sections.forEach(sec => {
                 tsvContent += `${sec.title}\t${lastCalculatedAverages[sec.key].val}\n`;
             });
@@ -537,11 +533,11 @@
                 try {
                     const item = new ClipboardItem({ 'image/png': blob });
                     navigator.clipboard.write([item]).then(() => {
-                        showToast("Chart Image copied to clipboard! Paste directly into Google Sheets or Docs.");
+                        showToast("Chart Image copied to clipboard!");
                     });
                 } catch (e) {
                     const link = document.createElement('a');
-                    link.download = 'SSCQ_Chart_Results.png';
+                    link.download = 'e-SFERA_Radar_Results.png';
                     link.href = canvas.toDataURL();
                     link.click();
                     showToast("Chart downloaded as PNG image.");
