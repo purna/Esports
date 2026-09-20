@@ -1,0 +1,99 @@
+[
+  {
+    "key": "MAS",
+    "title": "Mastery",
+    "items": [
+      { "id": 1, "text": "master a new skill in my sport." },
+      { "id": 2, "text": "improve my performance on a skill." },
+      { "id": 3, "text": "improve my skills." },
+      { "id": 4, "text": "increase the number of skills I can perform." },
+      { "id": 5, "text": "develop new skills and improve." }
+    ]
+  },
+  {
+    "key": "DEM",
+    "title": "Demonstration of Ability",
+    "items": [
+      { "id": 6, "text": "win." },
+      { "id": 7, "text": "demonstrate I am better than others." },
+      { "id": 8, "text": "show ability by winning or placing." },
+      { "id": 9, "text": "know I can outperform others." },
+      { "id": 10, "text": "prove I am better than opponents." },
+      { "id": 11, "text": "show I am one of the best." }
+    ]
+  },
+  {
+    "key": "PREP",
+    "title": "Physical & Mental Preparation",
+    "items": [
+      { "id": 12, "text": "keep my focus on the task." },
+      { "id": 13, "text": "psych myself up." },
+      { "id": 14, "text": "know I am mentally prepared." },
+      { "id": 15, "text": "stay focused on my goals." },
+      { "id": 16, "text": "prepare myself physically and mentally." },
+      { "id": 17, "text": "believe in my ability to give maximum effort." }
+    ]
+  },
+  {
+    "key": "PHY",
+    "title": "Physical Self-Presentation",
+    "items": [
+      { "id": 18, "text": "feel good about my weight." },
+      { "id": 19, "text": "feel I look good." },
+      { "id": 20, "text": "feel my body looks good." }
+    ]
+  },
+  {
+    "key": "SOC",
+    "title": "Social Support",
+    "items": [
+      { "id": 21, "text": "get positive feedback from teammates." },
+      { "id": 22, "text": "know I have support from others." },
+      { "id": 23, "text": "am told others believe in me." },
+      { "id": 24, "text": "am encouraged by coaches and family." },
+      { "id": 25, "text": "get positive feedback from coaches." },
+      { "id": 26, "text": "receive support and encouragement." }
+    ]
+  },
+  {
+    "key": "COA",
+    "title": "Coach's Leadership",
+    "items": [
+      { "id": 27, "text": "believe in my coach's abilities." },
+      { "id": 28, "text": "know coach will make good decisions." },
+      { "id": 29, "text": "know coach is a good leader." },
+      { "id": 30, "text": "trust in coach's decisions." },
+      { "id": 31, "text": "feel coach provides good leadership." }
+    ]
+  },
+  {
+    "key": "VIC",
+    "title": "Vicarious Experience",
+    "items": [
+      { "id": 32, "text": "see successful performances." },
+      { "id": 33, "text": "watch another athlete perform well." },
+      { "id": 34, "text": "watch a teammate perform well." },
+      { "id": 35, "text": "see a friend perform successfully." },
+      { "id": 36, "text": "watch teammates at my level." }
+    ]
+  },
+  {
+    "key": "ENV",
+    "title": "Environmental Comfort",
+    "items": [
+      { "id": 37, "text": "perform in an environment I like." },
+      { "id": 38, "text": "follow certain rituals." },
+      { "id": 39, "text": "feel comfortable in an environment." },
+      { "id": 40, "text": "like the environment I'm performing in." }
+    ]
+  },
+  {
+    "key": "SIT",
+    "title": "Situational Favorability",
+    "items": [
+      { "id": 41, "text": "get breaks from officials." },
+      { "id": 42, "text": "see breaks going my way." },
+      { "id": 43, "text": "feel everything is going right." }
+    ]
+  }
+]
