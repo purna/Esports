@@ -77,13 +77,8 @@
             font-weight: 600;
         }
 
-        .wizard-step {
-            display: none;
-        }
-
-        .wizard-step.active {
-            display: block;
-        }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
 
         .section-header {
             background-color: var(--border-color);
@@ -102,6 +97,40 @@
             font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: normal;
+        }
+
+        /* Demographic Form Fields */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 15px;
+        }
+
+        .demo-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .demo-field label {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .demo-field select, .demo-field input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .demo-field select:focus, .demo-field input:focus {
+            border-color: var(--accent);
         }
 
         .item-card {
@@ -127,15 +156,8 @@
             padding: 0 2px;
         }
 
-        .scale-legend span.left-anchor {
-            color: #ef4444;
-            font-weight: 500;
-        }
-
-        .scale-legend span.right-anchor {
-            color: var(--success);
-            font-weight: 500;
-        }
+        .scale-legend span.left-anchor { color: #ef4444; font-weight: 500; }
+        .scale-legend span.right-anchor { color: var(--success); font-weight: 500; }
 
         .likert-options {
             display: flex;
@@ -143,14 +165,8 @@
             gap: 5px;
         }
 
-        .likert-option {
-            flex: 1;
-            text-align: center;
-        }
-
-        .likert-option input {
-            display: none;
-        }
+        .likert-option { flex: 1; text-align: center; }
+        .likert-option input { display: none; }
 
         .likert-option label {
             display: block;
@@ -185,30 +201,13 @@
             transition: all 0.2s;
         }
 
-        button.btn-prev {
-            background-color: var(--border-color);
-            color: var(--text-main);
-        }
+        button.btn-prev { background-color: var(--border-color); color: var(--text-main); }
+        button.btn-prev:hover { background-color: #475569; }
 
-        button.btn-prev:hover {
-            background-color: #475569;
-        }
+        button.btn-next { background-color: var(--accent); color: #fff; margin-left: auto; }
+        button.btn-next:hover { background-color: var(--accent-hover); }
 
-        button.btn-next {
-            background-color: var(--accent);
-            color: #fff;
-            margin-left: auto;
-        }
-
-        button.btn-next:hover {
-            background-color: var(--accent-hover);
-        }
-
-        button.btn-submit {
-            background-color: var(--success);
-            color: #fff;
-            margin-left: auto;
-        }
+        button.btn-submit { background-color: var(--success); color: #fff; margin-left: auto; }
 
         .export-bar {
             display: flex;
@@ -239,10 +238,32 @@
             border-color: var(--accent);
         }
 
-        #results-container {
-            display: none;
-            margin-top: 10px;
+        /* Chart Tabs */
+        .chart-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
         }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background: var(--border-color);
+            color: var(--text-muted);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        #results-container { display: none; margin-top: 10px; }
 
         .scores-grid {
             display: grid;
@@ -258,22 +279,10 @@
             text-align: center;
         }
 
-        .score-card .val {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
+        .score-card .val { font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+        .score-card .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
-        .score-card .label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .chart-box {
-            max-width: 520px;
-            margin: 0 auto 20px auto;
-        }
+        .chart-box { max-width: 550px; margin: 0 auto 20px auto; }
 
         #loading-msg {
             text-align: center;
@@ -303,7 +312,7 @@
 
     <div class="container">
         <h1>e-S.F.E.R.A. Questionnaire</h1>
-        <p class="subtitle">During the match I am thinking about...</p>
+        <p class="subtitle">Mental Training & Performance Evaluation for Esporters</p>
 
         <div id="loading-msg">Loading questionnaire sections from JSON...</div>
 
@@ -312,40 +321,104 @@
                 <div class="progress-bar" id="progress-bar"></div>
             </div>
             <div class="step-indicator" id="step-indicator">
-                <span>Section <span id="current-step-num">1</span> of <span id="total-steps-num">5</span></span>
-                <span id="current-section-title">Synchrony</span>
+                <span>Section <span id="current-step-num">0</span> of <span id="total-steps-num">5</span></span>
+                <span id="current-section-title">General Background</span>
             </div>
 
             <form id="quiz-form">
-                <div id="wizard-steps-wrapper"></div>
+                <div id="wizard-steps-wrapper">
+                    <!-- Step 0: Generic Demographic Questions -->
+                    <div class="wizard-step active" id="step-0">
+                        <div class="section-header">
+                            <span>General Background Information</span>
+                            <span class="item-count">Demographics</span>
+                        </div>
+                        <div class="item-card">
+                            <div class="demo-grid">
+                                <div class="demo-field">
+                                    <label for="demo_gender">Gender</label>
+                                    <select id="demo_gender" name="demo_gender">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Non-binary / Other">Non-binary / Other</option>
+                                        <option value="Prefer not to say">Prefer not to say</option>
+                                    </select>
+                                </div>
+                                <div class="demo-field">
+                                    <label for="demo_age">Age Group</label>
+                                    <select id="demo_age" name="demo_age">
+                                        <option value="18-25">18-25</option>
+                                        <option value="26-30">26-30</option>
+                                        <option value="31-40">31-40</option>
+                                        <option value=">40">>40</option>
+                                    </select>
+                                </div>
+                                <div class="demo-field">
+                                    <label for="demo_genre">Favorite Game Genre</label>
+                                    <select id="demo_genre" name="demo_genre">
+                                        <option value="Shooter">Shooter (FPS/TPS)</option>
+                                        <option value="MOBA">MOBA</option>
+                                        <option value="MMORPG">MMORPG</option>
+                                        <option value="iRacing">iRacing / Simulator</option>
+                                        <option value="Cards">Card Games</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Fighting">Fighting</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="demo-field">
+                                    <label for="demo_hours">Weekly Gaming Hours</label>
+                                    <input type="number" id="demo_hours" name="demo_hours" value="15" min="0" max="100">
+                                </div>
+                                <div class="demo-field">
+                                    <label for="demo_comp">Participate in Official Competitions?</label>
+                                    <select id="demo_comp" name="demo_comp">
+                                        <option value="No">No</option>
+                                        <option value="Yes">Yes</option>
+                                    </select>
+                                </div>
+                                <div class="demo-field">
+                                    <label for="demo_level">Self-Perceived Expertise Level</label>
+                                    <select id="demo_level" name="demo_level">
+                                        <option value="Casual">Casual (Amateur / for fun)</option>
+                                        <option value="Intermediate">Intermediate (Occasional ranked)</option>
+                                        <option value="Advanced">Advanced (High-level competitor)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="btn-group" id="btn-group">
-                    <button type="button" class="nav-btn btn-prev" id="btn-prev" onclick="changeStep(-1)"
-                        style="display: none;">Previous</button>
-                    <button type="button" class="nav-btn btn-next" id="btn-next" onclick="changeStep(1)">Next
-                        Section</button>
-                    <button type="button" class="nav-btn btn-submit" id="btn-submit" onclick="calculateScores()"
-                        style="display: none;">Complete & View Results</button>
+                    <button type="button" class="nav-btn btn-prev" id="btn-prev" onclick="changeStep(-1)" style="display: none;">Previous</button>
+                    <button type="button" class="nav-btn btn-next" id="btn-next" onclick="changeStep(1)">Next Section</button>
+                    <button type="button" class="nav-btn btn-submit" id="btn-submit" onclick="calculateScores()" style="display: none;">Complete & View Results</button>
                 </div>
             </form>
         </div>
 
         <div id="results-container">
-            <h2 style="text-align: center; color: var(--accent);">Your Mental Factor Profile</h2>
+            <h2 style="text-align: center; color: var(--accent);">Your Mental Performance Profile</h2>
 
             <div class="export-bar">
-                <button type="button" class="btn-action" onclick="copyTableData()">📋 Copy Data for Google
-                    Sheets</button>
+                <button type="button" class="btn-action" onclick="copyTableData()">📋 Copy Data for Google Sheets</button>
                 <button type="button" class="btn-action" onclick="copyChartImage()">🖼️ Copy Chart Image</button>
             </div>
 
             <div class="scores-grid" id="scores-grid"></div>
 
-            <div class="chart-box">
-                <canvas id="radarChart"></canvas>
+            <!-- Chart Switcher Tabs -->
+            <div class="chart-tabs">
+                <button type="button" class="tab-btn active" onclick="switchChart('radar')">🕸️ Radar Chart</button>
+                <button type="button" class="tab-btn" onclick="switchChart('bar')">📊 Bar Chart</button>
+                <button type="button" class="tab-btn" onclick="switchChart('polar')">🎯 Polar Chart</button>
             </div>
-            <button type="button" class="nav-btn btn-prev" style="width: 100%;" onclick="restartQuiz()">Retake
-                Assessment</button>
+
+            <div class="chart-box">
+                <canvas id="activeChartCanvas"></canvas>
+            </div>
+            <button type="button" class="nav-btn btn-prev" style="width: 100%; margin-top: 15px;" onclick="restartQuiz()">Retake Assessment</button>
         </div>
     </div>
 
@@ -353,8 +426,9 @@
 
     <script>
         let sections = [];
-        let currentStep = 0;
+        let currentStep = 0; // 0 = General Background
         let currentChart = null;
+        let activeChartType = 'radar';
         let lastCalculatedAverages = {};
 
         async function loadQuestionsJSON() {
@@ -382,13 +456,13 @@
         function renderWizard() {
             const wrapper = document.getElementById("wizard-steps-wrapper");
             const scoresGrid = document.getElementById("scores-grid");
-            wrapper.innerHTML = "";
             scoresGrid.innerHTML = "";
 
             sections.forEach((sec, sIdx) => {
+                const stepNum = sIdx + 1;
                 const stepDiv = document.createElement("div");
-                stepDiv.className = `wizard-step ${sIdx === 0 ? 'active' : ''}`;
-                stepDiv.id = `step-${sIdx}`;
+                stepDiv.className = `wizard-step`;
+                stepDiv.id = `step-${stepNum}`;
 
                 let stepHtml = `
                     <div class="section-header">
@@ -447,13 +521,18 @@
         function updateWizardUI() {
             const totalSteps = sections.length;
 
-            const progressPct = ((currentStep + 1) / totalSteps) * 100;
+            const progressPct = (currentStep / totalSteps) * 100;
             document.getElementById("progress-bar").style.width = `${progressPct}%`;
-            document.getElementById("current-step-num").innerText = currentStep + 1;
-            document.getElementById("current-section-title").innerText = sections[currentStep].title;
+            document.getElementById("current-step-num").innerText = currentStep;
+
+            if (currentStep === 0) {
+                document.getElementById("current-section-title").innerText = "General Background";
+            } else {
+                document.getElementById("current-section-title").innerText = sections[currentStep - 1].title;
+            }
 
             document.getElementById("btn-prev").style.display = currentStep > 0 ? "block" : "none";
-            if (currentStep === totalSteps - 1) {
+            if (currentStep === totalSteps) {
                 document.getElementById("btn-next").style.display = "none";
                 document.getElementById("btn-submit").style.display = "block";
             } else {
@@ -479,56 +558,137 @@
             document.getElementById("quiz-content").style.display = "none";
             document.getElementById("results-container").style.display = "block";
 
-            renderRadarChart();
+            renderSelectedChart();
         }
 
-        function renderRadarChart() {
-            const ctx = document.getElementById('radarChart').getContext('2d');
+        function switchChart(type) {
+            activeChartType = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderSelectedChart();
+        }
+
+        function renderSelectedChart() {
+            const ctx = document.getElementById('activeChartCanvas').getContext('2d');
             if (currentChart) currentChart.destroy();
 
             const labels = sections.map(s => s.title);
             const dataVals = sections.map(s => lastCalculatedAverages[s.key].val);
 
-            currentChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'S.F.E.R.A. Factor Score (1-5)',
-                        data: dataVals,
-                        backgroundColor: 'rgba(99, 102, 241, 0.25)',
-                        borderColor: '#6366f1',
-                        pointBackgroundColor: '#6366f1'
-                    }]
-                },
-                options: {
-                    scales: {
-                        r: {
-                            suggestedMin: 1,
-                            suggestedMax: 5,
-                            ticks: { stepSize: 1, color: '#94a3b8', backdropColor: 'transparent' },
-                            grid: { color: '#334155' },
-                            pointLabels: { color: '#f8fafc', font: { size: 12 } }
-                        }
+            if (activeChartType === 'radar') {
+                currentChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Factor Score (1-5)',
+                            data: dataVals,
+                            backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                            borderColor: '#6366f1',
+                            pointBackgroundColor: '#6366f1'
+                        }]
                     },
-                    plugins: { legend: { labels: { color: '#f8fafc' } } }
-                }
-            });
+                    options: {
+                        scales: {
+                            r: {
+                                suggestedMin: 1,
+                                suggestedMax: 5,
+                                ticks: { stepSize: 1, color: '#94a3b8', backdropColor: 'transparent' },
+                                grid: { color: '#334155' },
+                                pointLabels: { color: '#f8fafc', font: { size: 12 } }
+                            }
+                        },
+                        plugins: { legend: { labels: { color: '#f8fafc' } } }
+                    }
+                });
+            } else if (activeChartType === 'bar') {
+                currentChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Factor Score (1-5)',
+                            data: dataVals,
+                            backgroundColor: '#6366f1',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        scales: {
+                            x: {
+                                min: 1,
+                                max: 5,
+                                ticks: { color: '#94a3b8' },
+                                grid: { color: '#334155' }
+                            },
+                            y: {
+                                ticks: { color: '#f8fafc' },
+                                grid: { display: false }
+                            }
+                        },
+                        plugins: { legend: { labels: { color: '#f8fafc' } } }
+                    }
+                });
+            } else if (activeChartType === 'polar') {
+                currentChart = new Chart(ctx, {
+                    type: 'polarArea',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: dataVals,
+                            backgroundColor: [
+                                'rgba(99, 102, 241, 0.7)',
+                                'rgba(34, 197, 94, 0.7)',
+                                'rgba(234, 179, 8, 0.7)',
+                                'rgba(236, 72, 153, 0.7)',
+                                'rgba(14, 165, 233, 0.7)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            r: {
+                                min: 1,
+                                max: 5,
+                                ticks: { color: '#94a3b8', backdropColor: 'transparent' },
+                                grid: { color: '#334155' }
+                            }
+                        },
+                        plugins: { legend: { labels: { color: '#f8fafc' } } }
+                    }
+                });
+            }
         }
 
         function copyTableData() {
-            let tsvContent = "Factor\tAverage Score\n";
+            const gender = document.getElementById("demo_gender").value;
+            const age = document.getElementById("demo_age").value;
+            const genre = document.getElementById("demo_genre").value;
+            const hours = document.getElementById("demo_hours").value;
+            const comp = document.getElementById("demo_comp").value;
+            const level = document.getElementById("demo_level").value;
+
+            let tsvContent = "Category\tValue\n";
+            tsvContent += `Gender\t${gender}\n`;
+            tsvContent += `Age Group\t${age}\n`;
+            tsvContent += `Favorite Genre\t${genre}\n`;
+            tsvContent += `Weekly Hours\t${hours}\n`;
+            tsvContent += `Competes Officially\t${comp}\n`;
+            tsvContent += `Expertise Level\t${level}\n\n`;
+
+            tsvContent += "Subscale Factor\tAverage Score\n";
             sections.forEach(sec => {
                 tsvContent += `${sec.title}\t${lastCalculatedAverages[sec.key].val}\n`;
             });
 
             navigator.clipboard.writeText(tsvContent).then(() => {
-                showToast("Data copied! Paste (Ctrl+V) directly into Google Sheets.");
+                showToast("Demographics & Score Data copied! Paste (Ctrl+V) directly into Google Sheets.");
             });
         }
 
         function copyChartImage() {
-            const canvas = document.getElementById('radarChart');
+            const canvas = document.getElementById('activeChartCanvas');
             canvas.toBlob(blob => {
                 try {
                     const item = new ClipboardItem({ 'image/png': blob });
@@ -537,7 +697,7 @@
                     });
                 } catch (e) {
                     const link = document.createElement('a');
-                    link.download = 'e-SFERA_Radar_Results.png';
+                    link.download = `e-SFERA_${activeChartType}_Chart.png`;
                     link.href = canvas.toDataURL();
                     link.click();
                     showToast("Chart downloaded as PNG image.");
