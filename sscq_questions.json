@@ -1,0 +1,156 @@
+[
+  {
+    "key": "SYN",
+    "title": "Synchrony",
+    "items": [
+      {
+        "id": "Sync_1",
+        "text": "My thinking was completely focused on the action."
+      },
+      {
+        "id": "Sync_2",
+        "text": "I easily perceived information from the game context."
+      },
+      {
+        "id": "Sync_3",
+        "text": "Thoughts and actions coincided."
+      },
+      {
+        "id": "Sync_4",
+        "text": "I was fully immersed in the exact moment."
+      },
+      {
+        "id": "Sync_5",
+        "text": "I felt I had everything under control."
+      },
+      {
+        "id": "Sync_6",
+        "text": "I was completely detached from external distractions."
+      },
+      {
+        "id": "Sync_7",
+        "text": "I was execution-oriented without overthinking."
+      },
+      {
+        "id": "Sync_8",
+        "text": "My physical response reacted exactly to what I saw."
+      },
+      {
+        "id": "Sync_9",
+        "text": "I was focused only on the immediate scenario."
+      },
+      {
+        "id": "Sync_10",
+        "text": "I maintained focus seamlessly from one action to the next."
+      },
+      {
+        "id": "Sync_11",
+        "text": "I knew exactly what step to take next without pausing."
+      },
+      {
+        "id": "Sync_12",
+        "text": "I executed mechanics automatically."
+      }
+    ]
+  },
+  {
+    "key": "STR",
+    "title": "Strength",
+    "items": [
+      {
+        "id": "Stren_1",
+        "text": "I was confident in my abilities."
+      },
+      {
+        "id": "Stren_2",
+        "text": "I felt secure in my mechanical/technical skills."
+      },
+      {
+        "id": "Stren_3",
+        "text": "I knew exactly what my strengths were in that match."
+      },
+      {
+        "id": "Stren_4",
+        "text": "I was fully aware of my competitive potential."
+      },
+      {
+        "id": "Stren_5",
+        "text": "I trusted my strategic choices completely."
+      },
+      {
+        "id": "Stren_6",
+        "text": "I felt capable of overcoming any match obstacle."
+      }
+    ]
+  },
+  {
+    "key": "ENE",
+    "title": "Energy",
+    "items": [
+      {
+        "id": "Ener_1",
+        "text": "I knew how much physical energy I had been using."
+      },
+      {
+        "id": "Ener_2",
+        "text": "I was managing my mental fatigue successfully."
+      },
+      {
+        "id": "Ener_3",
+        "text": "I preserved enough energy for critical match turning points."
+      },
+      {
+        "id": "Ener_4",
+        "text": "I felt my stress levels were perfectly regulated."
+      }
+    ]
+  },
+  {
+    "key": "RHY",
+    "title": "Rhythm",
+    "items": [
+      {
+        "id": "Rhyth_1",
+        "text": "I proceeded without hesitation."
+      },
+      {
+        "id": "Rhyth_2",
+        "text": "My actions followed a natural, fluid sequence."
+      },
+      {
+        "id": "Rhyth_3",
+        "text": "I executed inputs at the optimal speed."
+      },
+      {
+        "id": "Rhyth_4",
+        "text": "I maintained a steady cadence despite pressure."
+      }
+    ]
+  },
+  {
+    "key": "ACT",
+    "title": "Activation",
+    "items": [
+      {
+        "id": "Acti_1",
+        "text": "I felt a strong inner drive to win."
+      },
+      {
+        "id": "Acti_2",
+        "text": "My emotional response fueled my determination."
+      },
+      {
+        "id": "Acti_3",
+        "text": "I felt fully engaged and excited by the challenge."
+      },
+      {
+        "id": "Acti_4",
+        "text": "I was motivated by absolute enjoyment of the competition."
+      },
+      {
+        "id": "Acti_5",
+        "text": "I felt an intense alignment between my desire and my actions."
+      }
+    ]
+  }
+]

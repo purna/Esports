@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESCG Esports | East Sussex College Group Lewes Campus</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyan: {
+                            neon: '#00f0ff',
+                        },
+                        magenta: {
+                            neon: '#ff0055',
+                        },
+                        dark: {
+                            base: '#06080e',
+                            surface: '#0d111c',
+                            card: 'rgba(16, 22, 36, 0.75)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon-cyan': '0 0 20px rgba(0, 240, 255, 0.4)',
+                        'neon-magenta': '0 0 20px rgba(255, 0, 85, 0.4)',
+                        'neon-glow': '0 0 35px rgba(0, 240, 255, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #05070c;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .font-display {
+            font-family: 'Orbitron', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(13, 17, 28, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: rgba(20, 27, 45, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.3);
+        }
+        .glass-card-magenta {
+            background: rgba(20, 27, 45, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 0, 85, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-magenta:hover {
+            border-color: rgba(255, 0, 85, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(255, 0, 85, 0.3);
+        }
+        .text-glow-cyan {
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+        }
+        .text-glow-magenta {
+            text-shadow: 0 0 12px rgba(255, 0, 85, 0.7);
+        }
+        /* Hide scrollbars for clean marquee sliders */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="selection:bg-cyan-neon selection:text-black antialiased">
+
+    <!-- Navigation Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-gray-800/80 transition-all duration-300" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-neon via-purple-600 to-magenta-neon p-0.5 flex items-center justify-center shadow-neon-cyan group-hover:scale-105 transition-transform">
+                        <div class="w-full h-full bg-dark-base rounded-[10px] flex items-center justify-center">
+                            <i class="fa-solid fa-shield-halved text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-neon to-magenta-neon"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="font-display text-2xl font-black tracking-wider text-white block leading-none">
+                            ESCG <span class="text-cyan-neon">LYNX</span>
+                        </span>
+                        <span class="text-[10px] font-semibold text-gray-400 tracking-widest uppercase block mt-1">Lewes Campus Esports</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden lg:flex items-center gap-8 font-display text-sm font-bold tracking-wider uppercase">
+                    <a href="#about" class="text-gray-300 hover:text-cyan-neon transition-colors py-2 relative group">
+                        About
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-neon transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#rosters" class="text-gray-300 hover:text-cyan-neon transition-colors py-2 relative group">
+                        Rosters
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-neon transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#stream" class="text-gray-300 hover:text-cyan-neon transition-colors py-2 relative group">
+                        Live & Clips
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-neon transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#matches" class="text-gray-300 hover:text-cyan-neon transition-colors py-2 relative group">
+                        Schedule
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-neon transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="#course" class="text-gray-300 hover:text-cyan-neon transition-colors py-2 relative group">
+                        BTEC Esports
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-cyan-neon transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </nav>
+
+                <!-- Action Button & Mobile Menu -->
+                <div class="flex items-center gap-4">
+                    <button onclick="scrollToApply()" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-neon to-purple-600 text-black font-display font-black text-xs uppercase tracking-widest hover:brightness-110 shadow-neon-cyan transition-all hover:scale-105">
+                        <i class="fa-solid fa-headset text-sm"></i> Join Team ESCG
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="lg:hidden text-gray-300 hover:text-white p-2 text-2xl focus:outline-none">
+                        <i class="fa-solid fa-bars" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden glass-panel border-b border-gray-800 px-6 py-6 space-y-4 font-display text-base tracking-wider uppercase">
+            <a href="#about" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-cyan-neon border-b border-gray-800">About ESCG</a>
+            <a href="#rosters" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-cyan-neon border-b border-gray-800">Team Rosters</a>
+            <a href="#stream" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-cyan-neon border-b border-gray-800">Streams & Media</a>
+            <a href="#matches" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-cyan-neon border-b border-gray-800">Fixtures & Results</a>
+            <a href="#course" onclick="toggleMobileMenu()" class="block py-2 text-gray-300 hover:text-cyan-neon border-b border-gray-800">BTEC & Arena</a>
+            <button onclick="toggleMobileMenu(); scrollToApply();" class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-cyan-neon to-magenta-neon text-black font-extrabold tracking-widest text-center">
+                JOIN TEAM ESCG
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen pt-32 pb-20 flex items-center justify-center overflow-hidden">
+        <!-- Glowing Orbs -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <div class="absolute top-1/4 left-1/5 w-[500px] h-[500px] bg-cyan-neon/10 rounded-full blur-[140px]"></div>
+            <div class="absolute bottom-1/4 right-1/5 w-[500px] h-[500px] bg-magenta-neon/15 rounded-full blur-[160px]"></div>
+            <div class="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:28px_28px] opacity-20"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-cyan-neon/30 text-cyan-neon font-mono text-xs sm:text-sm tracking-wider uppercase mb-8 shadow-inner">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-neon animate-pulse"></span>
+                Official East Sussex College Group Lewes Campus Hub
+            </div>
+
+            <!-- Title -->
+            <h1 class="font-display text-4xl sm:text-6xl lg:text-8xl font-black text-white tracking-tight leading-none mb-6">
+                ESCG <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-neon via-teal-300 to-magenta-neon text-glow-cyan">LEWES</span> LYNX
+            </h1>
+            <p class="font-display text-xl sm:text-2xl text-cyan-neon font-bold tracking-widest uppercase mb-4">
+                Home of College Champions
+            </p>
+            <p class="max-w-2xl mx-auto text-gray-300 font-light text-base sm:text-lg mb-10 leading-relaxed">
+                Dominating the British Esports Student Champs, nurturing premier gaming talent, and shaping the future of competitive gaming through education.
+            </p>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                <button onclick="scrollToApply()" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-neon to-purple-600 text-black font-display font-black text-sm uppercase tracking-widest hover:brightness-110 shadow-neon-cyan transition-all hover:-translate-y-1">
+                    <i class="fa-solid fa-gamepad mr-2"></i> Join Team ESCG
+                </button>
+                <a href="#stream" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-white font-display font-bold text-sm uppercase tracking-widest hover:border-cyan-neon transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-circle-play text-magenta-neon mr-2"></i> Watch Live Stream
+                </a>
+                <a href="#matches" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-card text-white font-display font-bold text-sm uppercase tracking-widest hover:border-cyan-neon transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-trophy text-cyan-neon mr-2"></i> View Schedule
+                </a>
+            </div>
+
+            <!-- Quick Stats Counters -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto glass-panel p-6 rounded-2xl border border-gray-800 shadow-2xl">
+                <div class="text-center p-3">
+                    <div class="font-display text-3xl sm:text-4xl font-black text-cyan-neon" id="stat-players">0</div>
+                    <div class="text-xs uppercase tracking-widest text-gray-400 font-semibold mt-1">Active Players</div>
+                </div>
+                <div class="text-center p-3 border-l border-gray-800/80">
+                    <div class="font-display text-3xl sm:text-4xl font-black text-magenta-neon" id="stat-titles">0</div>
+                    <div class="text-xs uppercase tracking-widest text-gray-400 font-semibold mt-1">National Titles</div>
+                </div>
+                <div class="text-center p-3 border-l border-gray-800/80">
+                    <div class="font-display text-3xl sm:text-4xl font-black text-cyan-neon">Top 5</div>
+                    <div class="text-xs uppercase tracking-widest text-gray-400 font-semibold mt-1">British Esports Rank</div>
+                </div>
+                <div class="text-center p-3 border-l border-gray-800/80">
+                    <div class="font-display text-3xl sm:text-4xl font-black text-purple-400" id="stat-hours">0</div>
+                    <div class="text-xs uppercase tracking-widest text-gray-400 font-semibold mt-1">Stream Hours</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Score Ticker Bar -->
+    <div class="w-full bg-dark-surface border-y border-gray-800/80 py-3 overflow-hidden relative">
+        <div class="max-w-7xl mx-auto px-4 flex items-center gap-4">
+            <span class="inline-flex items-center gap-2 bg-red-500/20 text-red-400 text-xs font-bold px-3 py-1 rounded-md border border-red-500/30 whitespace-nowrap">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> RECENT RESULTS
+            </span>
+            <div class="overflow-x-auto whitespace-nowrap flex gap-8 text-xs font-mono text-gray-300 no-scrollbar flex-1 items-center">
+                <span class="inline-flex items-center gap-2"><strong class="text-cyan-neon">Valorant:</strong> ESCG Lynx vs BHASVIC <span class="text-cyan-neon font-bold">[13 - 7]</span> WIN</span>
+                <span class="text-gray-600">•</span>
+                <span class="inline-flex items-center gap-2"><strong class="text-cyan-neon">RL:</strong> ESCG Lynx vs Chichester Storm <span class="text-magenta-neon font-bold">[3 - 1]</span> WIN</span>
+                <span class="text-gray-600">•</span>
+                <span class="inline-flex items-center gap-2"><strong class="text-cyan-neon">LoL:</strong> ESCG Lynx vs Sussex Coast <span class="text-cyan-neon font-bold">[2 - 0]</span> WIN</span>
+                <span class="text-gray-600">•</span>
+                <span class="inline-flex items-center gap-2"><strong class="text-cyan-neon">Overwatch:</strong> ESCG Lynx vs Worthing College <span class="text-yellow-400 font-bold">[3 - 2]</span> WIN</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- About ESCG Esports Section -->
+    <section id="about" class="py-24 relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-cyan-neon/10 text-cyan-neon font-mono text-xs uppercase tracking-wider mb-4 border border-cyan-neon/20">
+                    <i class="fa-solid fa-graduation-cap"></i> Esports Excellence
+                </div>
+                <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+                    PIONEERING STUDENT ESPORTS AT <span class="text-cyan-neon">LEWES CAMPUS</span>
+                </h2>
+                <p class="text-gray-300 text-base leading-relaxed mb-6">
+                    East Sussex College Group (Lewes) offers an elite competitive pipeline for prospective gamers. Combining state-of-the-art training facilities with structured coaching, our club empowers students to compete at national collegiate standards in the British Esports Student Championships.
+                </p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start gap-4 glass-card p-4 rounded-xl">
+                        <div class="w-10 h-10 rounded-lg bg-cyan-neon/20 text-cyan-neon flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-desktop text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-white font-bold text-base">Dedicated Esports Arena</h4>
+                            <p class="text-xs text-gray-400 mt-1">Tournament-spec PC rigs with 240Hz monitors, low-latency fiber network, and ergonomic gaming suites.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 glass-card p-4 rounded-xl">
+                        <div class="w-10 h-10 rounded-lg bg-magenta-neon/20 text-magenta-neon flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-display text-white font-bold text-base">Coaching & Academic Pathway</h4>
+                            <p class="text-xs text-gray-400 mt-1">Seamless integration with ESCG BTEC Level 2 & 3 Esports qualifications covering tournament organization & streaming.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image / Arena Showcase Grid -->
+            <div class="relative">
+                <div class="relative rounded-2xl overflow-hidden glass-panel border border-cyan-neon/30 shadow-2xl p-2">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80" alt="ESCG Esports Gaming Suite" class="rounded-xl w-full h-80 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-base via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-mono text-cyan-neon uppercase tracking-widest block">Lewes Campus Arena</span>
+                            <h3 class="font-display text-lg font-extrabold text-white">High-Spec Tournament Rig Room</h3>
+                        </div>
+                        <span class="px-3 py-1 rounded bg-cyan-neon text-black font-display font-black text-xs uppercase">2026 Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Active Game Rosters Tabbed Section -->
+    <section id="rosters" class="py-24 bg-dark-surface/50 border-y border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-display text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
+                    ACTIVE <span class="text-cyan-neon">TEAM ROSTERS</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-sm">
+                    Select a game discipline to view our varsity starting lineups, player mains, and official handles.
+                </p>
+
+                <!-- Game Switcher Buttons -->
+                <div class="flex flex-wrap justify-center gap-3 mt-8" id="roster-tabs">
+                    <button onclick="switchRoster('valorant')" id="tab-valorant" class="roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all bg-cyan-neon text-black shadow-neon-cyan">
+                        <i class="fa-solid fa-crosshairs mr-1"></i> Valorant
+                    </button>
+                    <button onclick="switchRoster('rocketleague')" id="tab-rocketleague" class="roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all glass-card text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-car-burst mr-1"></i> Rocket League
+                    </button>
+                    <button onclick="switchRoster('league')" id="tab-league" class="roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all glass-card text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-shield-cat mr-1"></i> League of Legends
+                    </button>
+                    <button onclick="switchRoster('overwatch')" id="tab-overwatch" class="roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all glass-card text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-gun mr-1"></i> Overwatch 2
+                    </button>
+                    <button onclick="switchRoster('apex')" id="tab-apex" class="roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all glass-card text-gray-300 hover:text-white">
+                        <i class="fa-solid fa-fire mr-1"></i> Apex Legends
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cards Container -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="roster-cards-container">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Streams & Media Center -->
+    <section id="stream" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="font-display text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
+                MEDIA HUB & <span class="text-magenta-neon">LIVE STREAMS</span>
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm">
+                Watch our official shoutcasters stream matches live from the Lewes campus studio or browse recent highlights.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Stream Video Container -->
+            <div class="lg:col-span-8 glass-panel rounded-2xl p-4 border border-gray-800">
+                <div class="relative aspect-video bg-black rounded-xl overflow-hidden group">
+                    <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80" alt="Stream Preview" class="w-full h-full object-cover opacity-80">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-base via-black/40 to-transparent"></div>
+                    
+                    <!-- Overlay Top Badge -->
+                    <div class="absolute top-4 left-4 flex items-center gap-3">
+                        <span class="bg-red-600 text-white font-display font-black text-xs px-3 py-1 rounded flex items-center gap-2 animate-pulse">
+                            <span class="w-2 h-2 rounded-full bg-white"></span> LIVE NOW
+                        </span>
+                        <span class="glass-panel text-white text-xs px-3 py-1 rounded font-mono">
+                            <i class="fa-solid fa-user text-cyan-neon mr-1"></i> 284 Viewers
+                        </span>
+                    </div>
+
+                    <!-- Overlay Bottom Details -->
+                    <div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+                        <div>
+                            <span class="text-cyan-neon font-mono text-xs uppercase tracking-widest block">British Esports Student Champs</span>
+                            <h3 class="text-white font-display text-xl font-bold">ESCG Lynx vs Chichester College</h3>
+                        </div>
+                        <button onclick="toggleAudio()" class="w-10 h-10 rounded-full bg-cyan-neon/20 text-cyan-neon border border-cyan-neon/50 flex items-center justify-center hover:bg-cyan-neon hover:text-black transition-all">
+                            <i class="fa-solid fa-volume-high" id="audio-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Stream Chat Simulation -->
+                <div class="mt-4 glass-card p-4 rounded-xl">
+                    <div class="flex items-center justify-between pb-3 border-b border-gray-800 mb-3">
+                        <span class="text-xs font-mono font-bold uppercase tracking-widest text-gray-400">
+                            <i class="fa-brands fa-twitch text-magenta-neon mr-1.5"></i> Live Chat Preview
+                        </span>
+                        <span class="text-xs font-mono text-cyan-neon">Twitch.tv/ESCGLewes</span>
+                    </div>
+                    <div class="h-28 overflow-y-auto space-y-2 font-mono text-xs pr-2" id="stream-chat">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clip Highlights Gallery (4 Cols) -->
+            <div class="lg:col-span-4 space-y-4">
+                <h3 class="font-display text-xl font-bold text-white mb-2 flex items-center justify-between">
+                    <span>Recent Highlights</span>
+                    <span class="text-xs text-cyan-neon font-mono">3 New Clips</span>
+                </h3>
+
+                <!-- Clip Card 1 -->
+                <div onclick="playClip('Insane 1v4 Valorant Clutch', 'Player: ESCG_KAI', 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80')" class="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 bg-black">
+                        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <i class="fa-solid fa-play text-cyan-neon text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-display text-sm font-bold group-hover:text-cyan-neon transition-colors">1v4 Ace Clutch</h4>
+                        <p class="text-xs text-gray-400 mt-1">Valorant Grand Final</p>
+                        <span class="text-[10px] text-magenta-neon font-mono">0:24 • 1.2k views</span>
+                    </div>
+                </div>
+
+                <!-- Clip Card 2 -->
+                <div onclick="playClip('Overtime Rocket League Pinch Goal', 'Player: ESCG_AERO', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=600&q=80')" class="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 bg-black">
+                        <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <i class="fa-solid fa-play text-cyan-neon text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-display text-sm font-bold group-hover:text-cyan-neon transition-colors">Zero Second Pinch Goal</h4>
+                        <p class="text-xs text-gray-400 mt-1">Rocket League Div 1</p>
+                        <span class="text-[10px] text-magenta-neon font-mono">0:18 • 890 views</span>
+                    </div>
+                </div>
+
+                <!-- Clip Card 3 -->
+                <div onclick="playClip('Pentakill Barons Pit Steal', 'Player: ESCG_NEXUS', 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=600&q=80')" class="glass-card p-3 rounded-xl flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-24 h-16 rounded-lg overflow-hidden shrink-0 bg-black">
+                        <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <i class="fa-solid fa-play text-cyan-neon text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-display text-sm font-bold group-hover:text-cyan-neon transition-colors">Baron Steal + Pentakill</h4>
+                        <p class="text-xs text-gray-400 mt-1">League of Legends</p>
+                        <span class="text-[10px] text-magenta-neon font-mono">0:45 • 2.1k views</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Match Schedule & Results Section -->
+    <section id="matches" class="py-24 bg-dark-surface/50 border-y border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <h2 class="font-display text-4xl sm:text-5xl font-black text-white tracking-tight mb-2">
+                        MATCH <span class="text-cyan-neon">SCHEDULE</span> & RESULTS
+                    </h2>
+                    <p class="text-gray-400 text-sm">British Esports Student Champs Season 2026</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="mt-6 md:mt-0 flex flex-wrap gap-2">
+                    <button onclick="filterMatches('all')" class="match-filter-btn active px-4 py-2 rounded-lg font-display text-xs font-bold bg-cyan-neon text-black">ALL</button>
+                    <button onclick="filterMatches('upcoming')" class="match-filter-btn px-4 py-2 rounded-lg font-display text-xs font-bold glass-card text-gray-300">UPCOMING</button>
+                    <button onclick="filterMatches('completed')" class="match-filter-btn px-4 py-2 rounded-lg font-display text-xs font-bold glass-card text-gray-300">RECENT RESULTS</button>
+                </div>
+            </div>
+
+            <!-- Matches List -->
+            <div class="space-y-4" id="matches-container">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- BTEC Esports Course & Facilities Showcase -->
+    <section id="course" class="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-display text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
+                BTEC ESPORTS & <span class="text-cyan-neon">ARENA SUITE</span>
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm">
+                Study the booming industry of competitive gaming at East Sussex College Group Lewes Campus.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-6 rounded-2xl border border-gray-800">
+                <div class="w-12 h-12 rounded-xl bg-cyan-neon/20 text-cyan-neon flex items-center justify-center text-xl font-bold mb-4">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h3 class="font-display text-lg font-bold text-white mb-2">High-Spec Rigs</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    NVIDIA RTX Graphics, 240Hz Gaming Monitors, Ultra-low Latency Peripherals, Secretlab Ergonomic Seats.
+                </p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-gray-800">
+                <div class="w-12 h-12 rounded-xl bg-magenta-neon/20 text-magenta-neon flex items-center justify-center text-xl font-bold mb-4">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h3 class="font-display text-lg font-bold text-white mb-2">Shoutcast Booth</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Dedicated broadcasting station equipped with multi-cam setups, ATEM switchers, and OBS streaming audio desks.
+                </p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-gray-800">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold mb-4">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h3 class="font-display text-lg font-bold text-white mb-2">Event Management</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Learn tournament organization, team management, branding, and digital marketing as part of the BTEC curriculum.
+                </p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-gray-800">
+                <div class="w-12 h-12 rounded-xl bg-teal-400/20 text-teal-300 flex items-center justify-center text-xl font-bold mb-4">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <h3 class="font-display text-lg font-bold text-white mb-2">Health & Performance</h3>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Modules focusing on esports psychology, reaction training, physical wellness, and nutritional management.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Join / Application Portal -->
+    <section id="join" class="py-24 bg-dark-surface/80 border-t border-gray-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel p-8 sm:p-12 rounded-3xl border border-cyan-neon/30 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-cyan-neon/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div class="text-center mb-10">
+                    <span class="px-3 py-1 rounded-full bg-cyan-neon/20 text-cyan-neon font-mono text-xs uppercase tracking-widest border border-cyan-neon/30 inline-block mb-3">
+                        Student Recruitment 2026
+                    </span>
+                    <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight">
+                        APPLY TO JOIN <span class="text-cyan-neon">TEAM ESCG</span>
+                    </h2>
+                    <p class="text-gray-400 text-xs sm:text-sm mt-2">Open to all registered East Sussex College Group (Lewes Campus) students.</p>
+                </div>
+
+                <form id="apply-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Full Name *</label>
+                            <input type="text" required placeholder="e.g. Alex Morgan" class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Student College ID *</label>
+                            <input type="text" required placeholder="e.g. LEW-94821" class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Primary Game Title *</label>
+                            <select required class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                                <option value="">Select a Game Discipline</option>
+                                <option value="valorant">Valorant</option>
+                                <option value="rocketleague">Rocket League</option>
+                                <option value="league">League of Legends</option>
+                                <option value="overwatch">Overwatch 2</option>
+                                <option value="apex">Apex Legends</option>
+                                <option value="other">Shoutcasting / Content Creation</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">In-Game Name / Tag & Rank *</label>
+                            <input type="text" required placeholder="e.g. LynxMaster#UK1 (Ascendant 2)" class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">Discord Tag *</label>
+                            <input type="text" required placeholder="e.g. username#0000" class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-mono text-gray-300 uppercase mb-2">College Course / Enrolment Year</label>
+                            <input type="text" placeholder="e.g. BTEC Esports Level 3 - Yr 1" class="w-full px-4 py-3 rounded-xl bg-dark-base border border-gray-800 text-white text-sm focus:border-cyan-neon focus:outline-none transition-colors">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-neon via-purple-600 to-magenta-neon text-black font-display font-black text-sm uppercase tracking-widest hover:brightness-110 shadow-neon-cyan transition-all">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Submit Application
+                    </button>
+                </form>
+
+                <div id="form-success" class="hidden text-center py-8">
+                    <div class="w-16 h-16 rounded-full bg-cyan-neon/20 text-cyan-neon mx-auto flex items-center justify-center text-2xl mb-4">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white">Application Received!</h3>
+                    <p class="text-xs text-gray-400 mt-2">Our Lewes Esports Coordinator will review your stats and contact you via Discord.</p>
+                </div>
+            </div>
+
+            <!-- Discord Banner -->
+            <div class="mt-8 glass-card p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 border-l-4 border-l-purple-500">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-2xl">
+                        <i class="fa-brands fa-discord"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-display text-white font-bold text-base">Join Official Lewes Discord Server</h4>
+                        <p class="text-xs text-gray-400">Scrims, casual gaming nights, and student announcements.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-mono text-cyan-neon"><i class="fa-solid fa-users mr-1"></i> 1,420 Online</span>
+                    <button onclick="copyDiscordLink()" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-display font-bold text-xs uppercase tracking-wider transition-all">
+                        Connect
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark-base border-t border-gray-800/80 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <span class="font-display text-xl font-bold text-white block">ESCG <span class="text-cyan-neon">LEWES</span></span>
+                    <p class="text-xs text-gray-400 mt-2">East Sussex College Group - Mountfield Road, Lewes, BN7 2EH</p>
+                </div>
+                <div>
+                    <h5 class="font-display text-xs text-cyan-neon uppercase tracking-widest font-bold mb-3">Affiliations</h5>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li>British Esports Federation</li>
+                        <li>Student Champs Div 1</li>
+                        <li>AoC Sport Esports</li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-display text-xs text-cyan-neon uppercase tracking-widest font-bold mb-3">Quick Links</h5>
+                    <ul class="text-xs text-gray-400 space-y-1">
+                        <li><a href="#about" class="hover:text-white">About Campus</a></li>
+                        <li><a href="#rosters" class="hover:text-white">Rosters</a></li>
+                        <li><a href="#course" class="hover:text-white">BTEC Course Info</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-display text-xs text-cyan-neon uppercase tracking-widest font-bold mb-3">Social Handles</h5>
+                    <div class="flex justify-center sm:justify-start gap-4 text-lg text-gray-400">
+                        <a href="#" class="hover:text-cyan-neon"><i class="fa-brands fa-twitch"></i></a>
+                        <a href="#" class="hover:text-cyan-neon"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#" class="hover:text-cyan-neon"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="hover:text-cyan-neon"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800/50 pt-6 text-center text-xs text-gray-500 font-mono">
+                © 2026 East Sussex College Group (ESCG) Lewes Campus Esports Club. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Video Modal Preview -->
+    <div id="video-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel border border-cyan-neon/40 max-w-3xl w-full rounded-2xl p-6 relative">
+            <button onclick="closeClipModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modal-title" class="font-display text-xl font-bold text-white mb-1"></h3>
+            <p id="modal-player" class="text-xs font-mono text-cyan-neon mb-4"></p>
+            <div class="aspect-video bg-black rounded-xl overflow-hidden relative flex items-center justify-center">
+                <img id="modal-img" src="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <span class="text-xs font-mono text-gray-300 bg-black/70 px-4 py-2 rounded-full border border-cyan-neon/50">
+                        <i class="fa-solid fa-play mr-2 text-cyan-neon"></i> Simulated Clip Playback
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Rosters Data
+        const rosterData = {
+            valorant: [
+                { ign: 'ESCG_KAI', role: 'Duelist / IGL', agent: 'Jett / Iso', rank: 'Radiant #340', handle: '@kai_val' },
+                { ign: 'VORTEX', role: 'Initiator', agent: 'Fade / Sova', rank: 'Ascendant 3', handle: '@vortex_fps' },
+                { ign: 'CYPHER_LEWES', role: 'Sentinel', agent: 'Cypher / Killjoy', rank: 'Immortal 2', handle: '@cypher_lws' },
+                { ign: 'SHADOW_X', role: 'Controller', agent: 'Omen / Clove', rank: 'Immortal 1', handle: '@shadow_x' },
+                { ign: 'NEO_BLADE', role: 'Flex', agent: 'KAY/O / Skye', rank: 'Ascendant 2', handle: '@neo_b' }
+            ],
+            rocketleague: [
+                { ign: 'AERO_LEWES', role: 'First Striker', agent: 'Octane', rank: 'Grand Champion II', handle: '@aero_rl' },
+                { ign: 'PULSE_UK', role: 'Third Man / Defense', agent: 'Fennec', rank: 'Grand Champion I', handle: '@pulse_uk' },
+                { ign: 'DRIFT_GOD', role: 'Playmaker', agent: 'Dominus', rank: 'Grand Champion I', handle: '@drift_rl' }
+            ],
+            league: [
+                { ign: 'NEXUS_KING', role: 'Mid Lane', agent: 'Syndra / Ahri', rank: 'Master 200 LP', handle: '@nexus_lol' },
+                { ign: 'LEWES_TOP', role: 'Top Lane', agent: 'Aatrox / K\'Sante', rank: 'Diamond 1', handle: '@lewes_top' },
+                { ign: 'JUNGLE_DAVE', role: 'Jungle', agent: 'Lee Sin / Viego', rank: 'Diamond 2', handle: '@jdave_lol' },
+                { ign: 'ADC_LYNX', role: 'Bot Lane', agent: 'Kai\'Sa / Jinx', rank: 'Master 50 LP', handle: '@adc_lynx' },
+                { ign: 'SUPPORT_SAM', role: 'Support', agent: 'Thresh / Naut', rank: 'Diamond 1', handle: '@sam_sup' }
+            ],
+            overwatch: [
+                { ign: 'SHIELD_WALL', role: 'Tank', agent: 'Reinhardt / Winston', rank: 'Grandmaster 4', handle: '@shield_ow' },
+                { ign: 'SNIPER_BEE', role: 'Hitscan DPS', agent: 'Widow / Ashe', rank: 'Grandmaster 3', handle: '@bee_ow' },
+                { ign: 'PHARAH_LEWES', role: 'Flex DPS', agent: 'Pharah / Genji', rank: 'Master 1', handle: '@pharah_lws' },
+                { ign: 'KIRIKO_MAIN', role: 'Flex Support', agent: 'Kiriko / Ana', rank: 'Grandmaster 5', handle: '@kiri_main' }
+            ],
+            apex: [
+                { ign: 'APEX_PRED_UK', role: 'Fragger / IGL', agent: 'Wraith / Horizon', rank: 'Apex Predator', handle: '@pred_uk' },
+                { ign: 'SCAN_GOD', role: 'Recon', agent: 'Bloodhound', rank: 'Masters', handle: '@scan_god' },
+                { ign: 'GIBBY_BRICK', role: 'Anchor', agent: 'Gibraltar', rank: 'Diamond 1', handle: '@gibby_b' }
+            ]
+        };
+
+        // Match Schedule Data
+        const matchesData = [
+            { game: 'Valorant', opponent: 'BHASVIC College', date: 'Oct 28, 2026', status: 'completed', score: '13 - 7 WIN', stage: 'Group Stage Rd 4' },
+            { game: 'Rocket League', opponent: 'Chichester Storm', date: 'Nov 02, 2026', status: 'upcoming', score: '16:00 GMT', stage: 'Quarter Finals' },
+            { game: 'League of Legends', opponent: 'Sussex Coast College', date: 'Nov 05, 2026', status: 'upcoming', score: '17:30 GMT', stage: 'Group Stage Rd 5' },
+            { game: 'Overwatch 2', opponent: 'Worthing College', date: 'Oct 21, 2026', status: 'completed', score: '3 - 2 WIN', stage: 'Group Stage Rd 3' }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            switchRoster('valorant');
+            renderMatches('all');
+            animateStats();
+            startChatSimulation();
+        });
+
+        // Tab Roster Switcher
+        function switchRoster(gameKey) {
+            document.querySelectorAll('.roster-tab').forEach(btn => {
+                btn.className = 'roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all glass-card text-gray-300 hover:text-white';
+            });
+            const activeTab = document.getElementById(`tab-${gameKey}`);
+            if (activeTab) {
+                activeTab.className = 'roster-tab px-6 py-3 rounded-xl font-display font-bold text-xs uppercase tracking-widest transition-all bg-cyan-neon text-black shadow-neon-cyan';
+            }
+
+            const container = document.getElementById('roster-cards-container');
+            container.innerHTML = '';
+
+            const players = rosterData[gameKey] || [];
+            players.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-6 rounded-2xl border border-gray-800 relative overflow-hidden group';
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-mono text-cyan-neon px-2.5 py-1 rounded bg-cyan-neon/10 border border-cyan-neon/20">${p.role}</span>
+                        <i class="fa-solid fa-shield text-gray-600 group-hover:text-cyan-neon transition-colors"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-bold text-white group-hover:text-cyan-neon transition-colors">${p.ign}</h3>
+                    <p class="text-xs text-gray-400 mt-1">Main: <strong class="text-gray-200">${p.agent}</strong></p>
+                    <div class="mt-4 pt-4 border-t border-gray-800/80 flex items-center justify-between text-xs">
+                        <span class="text-magenta-neon font-mono font-bold">${p.rank}</span>
+                        <span class="text-gray-500 font-mono">${p.handle}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Match Filter
+        function filterMatches(statusKey) {
+            document.querySelectorAll('.match-filter-btn').forEach(btn => {
+                btn.className = 'match-filter-btn px-4 py-2 rounded-lg font-display text-xs font-bold glass-card text-gray-300';
+            });
+            event.target.className = 'match-filter-btn active px-4 py-2 rounded-lg font-display text-xs font-bold bg-cyan-neon text-black';
+
+            renderMatches(statusKey);
+        }
+
+        function renderMatches(filter) {
+            const container = document.getElementById('matches-container');
+            container.innerHTML = '';
+
+            const filtered = matchesData.filter(m => filter === 'all' || m.status === filter);
+
+            filtered.forEach(m => {
+                const isWin = m.score.includes('WIN');
+                const borderClass = m.status === 'completed' ? (isWin ? 'border-l-cyan-neon' : 'border-l-magenta-neon') : 'border-l-purple-500';
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-5 rounded-xl border-l-4 ${borderClass} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-mono uppercase text-cyan-neon font-bold">${m.game}</span>
+                            <span class="text-gray-600">•</span>
+                            <span class="text-xs text-gray-400 font-mono">${m.stage}</span>
+                        </div>
+                        <h4 class="font-display text-lg font-bold text-white">ESCG Lynx vs ${m.opponent}</h4>
+                        <span class="text-xs text-gray-400 mt-1 block"><i class="fa-regular fa-calendar mr-1"></i> ${m.date}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-display font-black text-lg ${m.status === 'completed' ? 'text-cyan-neon' : 'text-magenta-neon'} block">${m.score}</span>
+                        <span class="text-[10px] font-mono text-gray-400 uppercase tracking-widest">${m.status}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Animated Quick Stats Counter
+        function animateStats() {
+            animateValue('stat-players', 0, 128, 2000);
+            animateValue('stat-titles', 0, 6, 1500);
+            animateValue('stat-hours', 0, 850, 2500);
+        }
+
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Stream Chat Simulation
+        function startChatSimulation() {
+            const messages = [
+                { user: 'BrightonGamer', msg: 'LETS GO ESCG!! 🔥' },
+                { user: 'LewesCoach', msg: 'Great retake on A site!' },
+                { user: 'KAI_Fan', msg: 'KAI is insane with the Operator' },
+                { user: 'ChichesterFan', msg: 'Gg wp nice round' },
+                { user: 'EsportsStudent', msg: 'BTEC squad showing up today' }
+            ];
+            const chatBox = document.getElementById('stream-chat');
+            let idx = 0;
+
+            setInterval(() => {
+                const item = messages[idx % messages.length];
+                const msgDiv = document.createElement('div');
+                msgDiv.innerHTML = `<span class="text-cyan-neon font-bold">${item.user}:</span> <span class="text-gray-300">${item.msg}</span>`;
+                chatBox.appendChild(msgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+                idx++;
+            }, 3000);
+        }
+
+        // Clip Modal Helpers
+        function playClip(title, player, img) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-player').innerText = player;
+            document.getElementById('modal-img').src = img;
+            document.getElementById('video-modal').classList.remove('hidden');
+        }
+
+        function closeClipModal() {
+            document.getElementById('video-modal').classList.add('hidden');
+        }
+
+        // Audio Toggle Mock
+        function toggleAudio() {
+            const icon = document.getElementById('audio-icon');
+            if (icon.classList.contains('fa-volume-high')) {
+                icon.className = 'fa-solid fa-volume-xmark';
+            } else {
+                icon.className = 'fa-solid fa-volume-high';
+            }
+        }
+
+        // Form Submit Mock
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            document.getElementById('apply-form').classList.add('hidden');
+            document.getElementById('form-success').classList.remove('hidden');
+        }
+
+        // Navigation Actions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function scrollToApply() {
+            document.getElementById('join').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyDiscordLink() {
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = 'https://discord.gg/escg-lewes-esports';
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            alert('Discord invite copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
