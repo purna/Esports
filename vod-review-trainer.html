@@ -19,7 +19,7 @@ main{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:16px
 #tl{position:relative;height:26px;background:#0b0e14;border-radius:6px;margin-top:10px;overflow:hidden}
 #tl i{position:absolute;top:3px;width:4px;height:20px;border-radius:2px}
 #ph{position:absolute;top:0;bottom:0;width:2px;background:#fff}
-.row{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
 .row b{min-width:48px;font-variant-numeric:tabular-nums}.row span.d{width:10px;height:10px;border-radius:50%;flex:none}
 .row .x{margin-left:auto;padding:2px 8px}.mut{color:var(--mut);font-size:13px}
 .good{color:#3fb950}.bad{color:#f85149}.mid{color:#d29922}
@@ -30,14 +30,19 @@ label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 #ann{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
 #atools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;padding:10px;border:1px dashed var(--ac);border-radius:10px}
 .sw{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid #fff}
+#tags{display:grid;grid-template-columns:1fr 1fr;margin:0}#tags button{padding:14px 8px;font-size:15px}#tags button:first-child{grid-column:1/-1}
+.cv{max-width:1100px;margin:16px auto;padding:0 16px;display:grid;gap:16px}
+.bar{height:8px;background:#0b0e14;border-radius:4px;overflow:hidden;flex:1;min-width:120px}.bar i{display:block;height:100%}
+details summary{cursor:pointer;color:var(--mut);font-size:13px}
 </style></head><body>
 <header>
 <h1>🎮 VOD Review Trainer</h1>
 <button id="mPlay" class="on">Student: Play</button>
 <button id="mCoach">Coach: Build answer key</button>
+<button id="mClass">Coach: Class results</button>
 </header>
 <main>
-<section>
+<section style="display:grid;gap:16px;align-content:start">
 <div class="card">
 <div id="vwrap" class="vid"><div id="vw"><div id="yt"></div></div><canvas id="ann" class="hide"></canvas></div>
 <div id="tl"><div id="ph"></div></div>
@@ -50,11 +55,7 @@ label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 <button id="aSaveF">💾 Save with video frame</button><button id="aSaveA">💾 Save drawing only</button><button id="aClose">Done</button>
 <div class="mut" style="width:100%">"With video frame" uses screen capture: when your browser asks, choose <b>This tab</b>. If it isn't available, the drawing is saved on its own (transparent PNG).</div>
 </div>
-<div class="tags" id="tags"></div>
-<input id="note" class="hide" placeholder="Coach note for next mark (why does this matter?)" style="width:100%">
 </div>
-</section>
-<aside style="display:grid;gap:16px;align-content:start">
 <div class="card"><h2>Video library</h2>
 <select id="sel" style="width:100%"></select>
 <div style="display:flex;gap:6px;margin-top:8px"><input id="url" placeholder="Paste YouTube URL" style="flex:1;min-width:0"><button id="add">Add</button></div>
@@ -65,21 +66,35 @@ label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 <div class="card" id="pPlay"><h2>Test settings</h2>
 <label><input type="checkbox" id="strict"> Hide player controls (no scrubbing)</label>
 <label style="margin-top:6px">Timing window <input id="win" type="number" value="5" min="2" max="15" style="width:60px"> s</label>
-<button id="go" style="margin-top:10px;width:100%">▶ Start / restart</button>
-<button id="fin" style="margin-top:6px;width:100%">Finish &amp; score</button></div>
+<button id="go" style="margin-top:10px;width:100%">▶ Start / restart</button></div>
+</section>
+<aside style="display:grid;gap:16px;align-content:start">
+<div class="card"><h2>Mark what you see</h2>
+<div class="tags" id="tags"></div>
+<input id="note" class="hide" placeholder="Coach note for next mark (why does this matter?)" style="width:100%">
+</div>
+<div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><h2 id="lh" style="margin:0 auto 0 0">Your marks</h2><button id="fin">Finish &amp; score</button></div><div id="list" class="list"></div></div>
+<div class="card hide" id="res"></div>
 <div class="card"><h2>Export</h2>
 <input id="who" placeholder="Student name (for the report)" style="width:100%">
 <div style="display:flex;gap:6px;margin-top:8px"><button id="eCsv" style="flex:1">⬇ CSV</button><button id="ePdf" style="flex:1">⬇ PDF report</button></div>
-<div class="mut" style="margin-top:6px">Includes scored results once you press Finish &amp; score. <span id="snapn">0</span> saved snapshot(s) go into the PDF.</div></div>
-<div class="card"><h2 id="lh">Your marks</h2><div id="list" class="list"></div></div>
-<div class="card hide" id="res"></div>
+<div class="mut" style="margin-top:6px">Marks, reflections and snapshots are saved in this browser automatically. Includes scored results once you press Finish &amp; score. <span id="snapn">0</span> saved snapshot(s) go into the PDF.</div></div>
 </aside>
 </main>
+<div id="classView" class="hide"><div class="cv">
+<div class="card"><h2>Class results</h2>
+<div class="mut">Load the CSV each student exported (select several at once). Files are read in your browser only.</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center"><button id="cfold">📁 Load folder of CSVs</button><input type="file" id="cdir" class="hide" webkitdirectory multiple><label style="color:var(--tx)">or pick files <input type="file" id="cfiles" accept=".csv" multiple></label><button id="cclr">Clear</button><button id="cexp">⬇ Class summary CSV</button></div></div>
+<div class="mut" id="cmsg"></div>
+<div id="cout"></div></div></div>
+
+<div style="max-width:1300px;margin:0 auto 32px;padding:0 16px"><div class="card" id="help"></div></div>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const TAGS=[{n:'Success',c:'#3fb950'},{n:'Positioning',c:'#f85149'},{n:'Mechanics',c:'#d29922'},{n:'Decision / Macro',c:'#a371f7'},{n:'Comms / Utility',c:'#39c5cf'}];
 const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let vids=JSON.parse(localStorage.getItem('vodvids')||'null')||[{id:'lvZgX1XI1BU',title:'Nigel\'s test video - build the key in Coach mode',key:[]}];
 let cur=0,mode='play',marks=[],player,ready=false,dur=0,lastRes=null,snaps=[];
 const save=()=>localStorage.setItem('vodvids',JSON.stringify(vids));
@@ -96,7 +111,8 @@ function loadVid(){
   $('#vw').innerHTML='<div id="yt"></div>';
   player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1},
     events:{onStateChange:e=>{if(e.data===0&&mode==='play'&&marks.length)finish()}}});
-  marks=[];lastRes=null;snaps=[];$('#snapn').textContent=0;closeAnn();render();
+  const att=getAttempt();marks=att.marks||[];snaps=att.snaps||[];lastRes=null;$('#res').classList.add('hide');$('#snapn').textContent=snaps.length;closeAnn();render();
+  if(att.scored&&mode==='play')finish();
 }
 function drawSel(){$('#sel').innerHTML=vids.map((v,i)=>`<option value="${i}">${v.title}</option>`).join('');$('#sel').value=cur}
 function drawTags(){
@@ -114,10 +130,12 @@ function mark(i){
 function render(){
   const list=mode==='coach'?vids[cur].key:marks;
   $('#lh').textContent=mode==='coach'?'Answer key (coach marks)':'Your marks';
-  $('#list').innerHTML=list.map((m,k)=>`<div class="row"><span class="d" style="background:${TAGS[m.tag].c}"></span><b>${fmt(m.t)}</b>${TAGS[m.tag].n}<span class="mut">${m.note||''}</span><button class="x" data-k="${k}">✕</button></div>`).join('')||'<div class="mut">Nothing marked yet.</div>';
+  $('#list').innerHTML=list.map((m,k)=>`<div class="row"><span class="d" style="background:${TAGS[m.tag].c}"></span><b>${fmt(m.t)}</b>${TAGS[m.tag].n}<span class="mut">${m.note||''}</span><button class="x" data-k="${k}">✕</button>${mode==='play'?`<input class="rf" data-k="${k}" placeholder="What should the player have done?" value="${esc(m.why||'')}" style="width:100%;font-size:13px">`:''}</div>`).join('')||'<div class="mut">Nothing marked yet.</div>';
   document.querySelectorAll('#list .x').forEach(b=>b.onclick=()=>{list.splice(+b.dataset.k,1);save();render()});
+  document.querySelectorAll('#list .rf').forEach(i=>i.oninput=()=>{marks[+i.dataset.k].why=i.value;saveAttempt()});
   document.querySelectorAll('#tl i').forEach(e=>e.remove());
   dur=player&&player.getDuration?player.getDuration():0;
+  if(mode==='play')saveAttempt();
   if(dur)list.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${m.t/dur*100}%;background:${TAGS[m.tag].c}`;$('#tl').appendChild(e)});
 }
 setInterval(()=>{if(!player||!player.getCurrentTime)return;const t=now();$('#clock').textContent=fmt(t);
@@ -138,19 +156,47 @@ function finish(){
   });
   const fa=marks.length-used.size;
   const pct=Math.max(0,Math.round((pts-0.5*fa)/(2*key.length)*100));
-  lastRes={vid:cur,pct,hit,n:key.length,fa,rows,extra:marks.filter((m,i)=>!used.has(i))};
+  lastRes={vid:cur,pct,hit,n:key.length,fa,rows,extra:marks.filter((m,i)=>!used.has(i))};saveAttempt();
   $('#res').classList.remove('hide');
   $('#res').innerHTML=`<h2>Result</h2><div class="big">${pct}%</div>
   <div class="mut">Spotted ${hit}/${key.length} · ${fa} false alarm${fa==1?'':'s'}</div>
   ${rows.map(x=>`<div class="row" style="cursor:pointer" data-t="${x.e.t}"><span class="d" style="background:${TAGS[x.e.tag].c}"></span><b>${fmt(x.e.t)}</b>
-  <div><span class="${x.r=='perfect'?'good':x.r=='missed'?'bad':'mid'}">${x.r}</span> · ${TAGS[x.e.tag].n}<div class="mut">${x.e.note||''}</div></div></div>`).join('')}
+  <div><span class="${x.r=='perfect'?'good':x.r=='missed'?'bad':'mid'}">${x.r}</span> · ${TAGS[x.e.tag].n}<div class="mut">${x.e.note||''}</div>${x.m&&x.m.why?'<div class="mut">You wrote: '+esc(x.m.why)+'</div>':''}</div></div>`).join('')}
   <div class="mut" style="margin-top:8px">Click a row to jump to that moment.</div>`;
   document.querySelectorAll('#res .row').forEach(r=>r.onclick=()=>{$('#vw').classList.remove('strict');player.seekTo(+r.dataset.t,true);player.playVideo()});
   // overlay key on timeline
   document.querySelectorAll('#tl i').forEach(e=>e.remove());
-  key.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${m.t/dur*100}%;background:${TAGS[m.tag].c};outline:2px solid #fff`;$('#tl').appendChild(e)});
+  if(dur)key.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${m.t/dur*100}%;background:${TAGS[m.tag].c};outline:2px solid #fff`;$('#tl').appendChild(e)});
+}
+const HELP={
+play:{t:'Student: Play',s:[
+'Choose the video in <b>Video library</b> (left), then press <b>▶ Start / restart</b>.',
+'Watch like a hazard-perception test. The moment you spot something a coach would mention, press a category on the right (or keys <b>1-5</b>): <b>Success</b> for good play, the others for problems.',
+'Need a closer look? <b>⏯ Pause / Play</b> any time. You can still mark while paused.',
+'Under each mark, type what the player should have done. This goes into your report.',
+'Optional: <b>✏️ Annotate this frame</b> to draw on the paused picture, then save it as an image.',
+'Press <b>Finish &amp; score</b> to compare your marks with the coach\'s answer key, then click a result to replay that moment.',
+'Type your name in <b>Export</b> and download the <b>CSV</b> (send this to your coach) or the <b>PDF report</b>.']},
+coach:{t:'Coach: Build answer key',s:[
+'Paste a YouTube link into <b>Video library</b>, add a title, then press <b>Add</b>.',
+'Play the video and press a category (or keys <b>1-5</b>) at every moment a student should catch. Include good plays as <b>Success</b>.',
+'Before marking, type a note in the box: the model answer to "what should the player have done?". Students see it after scoring.',
+'Check the list on the right. Remove any mistimed mark with ✕ and re-mark it.',
+'Your key is saved in this browser. To give it to students, press <b>Export</b> in Video library and share the .json file. Students open the tool and press <b>Import</b>.']},
+class:{t:'Coach: Class results',s:[
+'Put the students\' exported <b>CSV</b> files together in one folder.',
+'Press <b>📁 Load folder of CSVs</b> and choose the folder (or pick files directly). Other files in the folder are skipped. Nothing is uploaded; it all stays in your browser.',
+'Read <b>Moments, hardest first</b>: the bar shows how many students spotted each moment, with who missed it, who chose the wrong category, and their reflections.',
+'Use it as your debrief: replay the lowest moments from the class in Coach mode. <b>⬇ Class summary CSV</b> saves the table for your records.']}};
+function renderHelp(m){
+  const h=HELP[m];
+  $('#help').innerHTML='<details '+(localStorage.getItem('vodhelp')==='0'?'':'open')+'><summary style="cursor:pointer"><b>How it works: '+h.t+'</b></summary><ol style="margin:8px 0 0;padding-left:20px;line-height:1.7">'+h.s.map(x=>'<li>'+x+'</li>').join('')+'</ol><div class="mut" style="margin-top:8px">If the video shows an error, run the file from a local server (<code>python3 -m http.server</code>, then open localhost:8000) rather than double-clicking it.</div></details>';
+  $('#help details').ontoggle=e=>localStorage.setItem('vodhelp',e.target.open?'1':'0');
 }
 function setMode(m){
+  renderHelp(m);
+  $('main').classList.toggle('hide',m==='class');$('#classView').classList.toggle('hide',m!=='class');$('#mClass').classList.toggle('on',m==='class');
+  if(m==='class'){mode=m;$('#mPlay').classList.remove('on');$('#mCoach').classList.remove('on');try{player.pauseVideo()}catch(e){}renderClass();return}
   mode=m;$('#mPlay').classList.toggle('on',m==='play');$('#mCoach').classList.toggle('on',m==='coach');
   $('#note').classList.toggle('hide',m!=='coach');$('#pPlay').classList.toggle('hide',m!=='play');$('#res').classList.add('hide');
   $('#hint').textContent=m==='coach'?'Play the video and mark moments (keys 1-5). Add a note first if you want one. Export to share your key.':'Watch like a hazard-perception test: press a category (keys 1-5) the moment you spot a coachable issue or a success.';
@@ -158,15 +204,15 @@ function setMode(m){
 }
 $('#mPlay').onclick=()=>setMode('play');$('#mCoach').onclick=()=>setMode('coach');
 $('#sel').onchange=e=>{cur=+e.target.value;setMode(mode)};
-$('#go').onclick=()=>{$('#res').classList.add('hide');loadVid();setTimeout(()=>{try{player.playVideo()}catch(e){}},1200)};
+$('#go').onclick=()=>{$('#res').classList.add('hide');clearAttempt();loadVid();setTimeout(()=>{try{player.playVideo()}catch(e){}},1200)};
 $('#fin').onclick=finish;
 $('#add').onclick=()=>{const id=ytId($('#url').value);if(!id)return alert('Could not read a YouTube link.');
   vids.push({id,title:$('#ttl').value||'Video '+id,key:[]});cur=vids.length-1;$('#url').value=$('#ttl').value='';save();drawSel();setMode('coach')};
-$('#del').onclick=()=>{if(vids.length<2||!confirm('Delete this video and its key?'))return;vids.splice(cur,1);cur=0;save();drawSel();setMode(mode)};
+$('#del').onclick=()=>{if(vids.length<2||!confirm('Delete this video and its key?'))return;clearAttempt();vids.splice(cur,1);cur=0;save();drawSel();setMode(mode)};
 $('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(vids,null,1)],{type:'application/json'}));a.download='vod-library.json';a.click()};
 $('#imp').onclick=()=>$('#file').click();
 $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(!Array.isArray(d))throw 0;vids=d;cur=0;save();drawSel();setMode(mode)}catch(x){alert('Invalid library file.')}})};
-addEventListener('keydown',e=>{if(annOn)return;if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;const i=+e.key-1;if(i>=0&&i<TAGS.length)mark(i)});
+addEventListener('keydown',e=>{if(annOn||mode==='class')return;if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;const i=+e.key-1;if(i>=0&&i<TAGS.length)mark(i)});
 /* ---- annotation overlay ---- */
 const cv=$('#ann'),cx=cv.getContext('2d');let annOn=false,shapes=[],tool='pen',col='#ff3b30',drag=null,annT=0;
 function drawShape(s){
@@ -196,7 +242,7 @@ function stamp(o){const c=o.getContext('2d'),f=Math.max(12,Math.round(o.width/55
   const t=vids[cur].title+' · '+fmt(annT),w=c.measureText(t).width+f;c.fillStyle='rgba(0,0,0,.65)';c.fillRect(0,o.height-f*1.8,w,f*1.8);c.fillStyle='#fff';c.fillText(t,f/2,o.height-f*0.55)}
 function dl(o){
   const t=document.createElement('canvas');t.width=o.width;t.height=o.height;const c=t.getContext('2d');c.fillStyle='#1b2030';c.fillRect(0,0,t.width,t.height);c.drawImage(o,0,0);
-  snaps.push({t:annT,img:t.toDataURL('image/jpeg',.85),w:t.width,h:t.height});$('#snapn').textContent=snaps.length;
+  snaps.push({t:annT,img:t.toDataURL('image/jpeg',.85),w:t.width,h:t.height});$('#snapn').textContent=snaps.length;saveAttempt();
   const a=document.createElement('a');a.href=o.toDataURL('image/png');a.download='vod-note-'+fmt(annT).replace(':','m')+'s.png';a.click()}
 function saveAnn(){const o=document.createElement('canvas');o.width=cv.width;o.height=cv.height;o.getContext('2d').drawImage(cv,0,0);stamp(o);dl(o)}
 async function saveFrame(){
@@ -217,21 +263,21 @@ document.querySelectorAll('#atools [data-c]').forEach(b=>b.onclick=()=>col=b.dat
 /* ---- export ---- */
 function repRows(){
   const R=[];
-  if(mode==='coach'){vids[cur].key.forEach(e=>R.push({ct:e.t,cc:TAGS[e.tag].n,note:e.note||'',res:'',st:'',sc:''}));return{R,sum:'Coach answer key'}}
+  if(mode==='coach'){vids[cur].key.forEach(e=>R.push({ct:e.t,cc:TAGS[e.tag].n,note:e.note||'',res:'',st:'',sc:'',why:''}));return{R,sum:'Coach answer key'}}
   if(lastRes&&lastRes.vid===cur){
-    lastRes.rows.forEach(x=>R.push({ct:x.e.t,cc:TAGS[x.e.tag].n,note:x.e.note||'',res:x.r,st:x.m?x.m.t:'',sc:x.m?TAGS[x.m.tag].n:''}));
-    lastRes.extra.forEach(m=>R.push({ct:'',cc:'',note:'',res:'false alarm',st:m.t,sc:TAGS[m.tag].n}));
+    lastRes.rows.forEach(x=>R.push({ct:x.e.t,cc:TAGS[x.e.tag].n,note:x.e.note||'',res:x.r,st:x.m?x.m.t:'',sc:x.m?TAGS[x.m.tag].n:'',why:x.m?x.m.why||'':''}));
+    lastRes.extra.forEach(m=>R.push({ct:'',cc:'',note:'',res:'false alarm',st:m.t,sc:TAGS[m.tag].n,why:m.why||''}));
     return{R,sum:`Score ${lastRes.pct}% - spotted ${lastRes.hit}/${lastRes.n}, ${lastRes.fa} false alarm(s)`};
   }
-  marks.forEach(m=>R.push({ct:'',cc:'',note:'',res:'unscored',st:m.t,sc:TAGS[m.tag].n}));
+  marks.forEach(m=>R.push({ct:'',cc:'',note:'',res:'unscored',st:m.t,sc:TAGS[m.tag].n,why:m.why||''}));
   return{R,sum:'Marks only (press Finish & score first to include results)'};
 }
 const who=()=>$('#who').value.trim(),fname=ext=>'vod-'+(who()||'report').replace(/[^\w-]+/g,'_')+'.'+ext;
 function saveBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
 $('#eCsv').onclick=()=>{
   const {R}=repRows(),q=v=>'"'+String(v).replace(/"/g,'""')+'"',n=v=>v===''?'':(+v).toFixed(1);
-  const head=['Student','Video','Coach time (s)','Coach category','Coach note','Result','Student time (s)','Student category'];
-  const lines=[head,...R.map(r=>[who(),vids[cur].title,n(r.ct),r.cc,r.note,r.res,n(r.st),r.sc])].map(l=>l.map(q).join(','));
+  const head=['Student','Video','Coach time (s)','Coach category','Coach note','Result','Student time (s)','Student category','Student reflection'];
+  const lines=[head,...R.map(r=>[who(),vids[cur].title,n(r.ct),r.cc,r.note,r.res,n(r.st),r.sc,r.why||''])].map(l=>l.map(q).join(','));
   saveBlob(new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv'}),fname('csv'));
 };
 $('#ePdf').onclick=()=>{
@@ -247,11 +293,91 @@ $('#ePdf').onclick=()=>{
   R.forEach(r=>{
     let t=(r.ct!==''?fmt(r.ct):'--')+'   '+(r.cc||'(no coach event)');
     if(r.res)t+='   |   '+r.res;if(r.st!=='')t+='   |   student '+fmt(r.st)+' '+r.sc;
-    line(t,10,true,col(r.res));if(r.note)line('Coach: '+r.note,9,false,[110,110,110]);y+=3;
+    line(t,10,true,col(r.res));if(r.note)line('Coach: '+r.note,9,false,[110,110,110]);
+    if(r.why)line('Student: '+r.why,9,false,[40,90,160]);y+=3;
   });
   if(snaps.length){y+=10;line('Annotated snapshots',14,true);y+=4;
     snaps.forEach(s=>{const w=W-2*M,h=w*s.h/s.w;need(h+24);d.addImage(s.img,'JPEG',M,y,w,h);y+=h+4;line('Paused at '+fmt(s.t),9,false,[110,110,110]);y+=8})}
   d.save(fname('pdf'));
 };
+/* ---- class view ---- */
+let cls=[];try{cls=JSON.parse(localStorage.getItem('vodclass')||'[]')}catch(e){}
+const saveCls=()=>{try{localStorage.setItem('vodclass',JSON.stringify(cls))}catch(e){}};
+function parseCSV(t){t=t.replace(/^\ufeff/,'');const out=[];let r=[],f='',q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c=='"')q=true;else if(c==','){r.push(f);f=''}
+    else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);f='';out.push(r);r=[]}else f+=c}
+  if(f||r.length){r.push(f);out.push(r)}return out}
+async function loadFiles(list){
+  let ok=0,skip=0;
+  for(const f of list){
+    if(!/\.csv$/i.test(f.name)){skip++;continue}
+    const all=parseCSV(await f.text()).filter(r=>r.length>=8);
+    if(!all.length||all[0][0]!=='Student'){skip++;continue}
+    const rows=all.slice(1),name=(rows[0]&&rows[0][0])||f.name.replace(/\.csv$/i,'');
+    cls=cls.filter(c=>c.file!==f.name);cls.push({file:f.name,name,rows});ok++}
+  saveCls();
+  $('#cmsg').textContent='Loaded '+ok+' student file'+(ok==1?'':'s')+(skip?' · skipped '+skip+' other file'+(skip==1?'':'s')+' (not student CSVs)':'');
+  renderClass()}
+$('#cfold').onclick=()=>$('#cdir').click();
+$('#cdir').onchange=e=>{loadFiles([...e.target.files]);e.target.value=''};
+$('#cfiles').onchange=e=>{loadFiles([...e.target.files]);e.target.value=''};
+$('#cclr').onclick=()=>{cls=[];saveCls();$('#cmsg').textContent='';renderClass()};
+const isHit=r=>r==='perfect'||r.startsWith('right');
+function agg(){
+  const V={};
+  cls.forEach(c=>c.rows.forEach(r=>{
+    const vid=r[1],ct=r[2],cc=r[3],note=r[4],res=r[5],sc=r[7],why=r[8]||'';
+    const v=V[vid]=V[vid]||{ev:{},stu:{}};
+    const S=v.stu[c.name]=v.stu[c.name]||{hit:0,perfect:0,fa:0,n:0};
+    if(ct!==''){
+      const k=ct+'|'+cc,e=v.ev[k]=v.ev[k]||{t:+ct,cc,note,list:[]};if(!e.note)e.note=note;
+      e.list.push({s:c.name,res,sc,why});S.n++;if(res==='perfect')S.perfect++;if(isHit(res))S.hit++;
+    }else if(res==='false alarm')S.fa++;
+  }));
+  return V}
+function renderClass(){
+  const V=agg(),names=Object.keys(V);
+  if(!names.length){$('#cout').innerHTML='<div class="card mut">No files loaded yet.</div>';return}
+  $('#cout').innerHTML=names.map(vn=>{
+    const v=V[vn],evs=Object.values(v.ev).map(e=>({...e,rate:e.list.filter(x=>isHit(x.res)).length/e.list.length})).sort((a,b)=>a.rate-b.rate||a.t-b.t);
+    const stu=Object.entries(v.stu);
+    return `<div class="card"><h2>${esc(vn)} <span class="mut">· ${stu.length} student${stu.length==1?'':'s'}</span></h2>
+    <div class="mut" style="margin-bottom:6px">Students</div>
+    ${stu.map(([n,S])=>`<div class="row"><b style="min-width:140px">${esc(n)}</b>${S.n?`spotted ${S.hit}/${S.n} · exact category ${S.perfect} · false alarms ${S.fa}`:'<span class="mut">no scored results in this file</span>'}</div>`).join('')}
+    <div class="mut" style="margin:14px 0 6px">Moments, hardest first</div>
+    ${evs.map(e=>{const tg=TAGS.find(t=>t.n===e.cc),pc=Math.round(e.rate*100),L=e.list,
+      miss=L.filter(x=>x.res==='missed').map(x=>x.s),wrong=L.filter(x=>x.res.startsWith('right')).map(x=>x.s+' ('+x.sc+')'),why=L.filter(x=>x.why);
+      return `<div class="row" style="align-items:flex-start"><span class="d" style="background:${tg?tg.c:'#888'};margin-top:5px"></span><b>${fmt(e.t)}</b>
+      <div style="flex:1;min-width:200px"><div style="display:flex;gap:8px;align-items:center"><span>${esc(e.cc)}</span><div class="bar"><i style="width:${pc}%;background:${pc<50?'#f85149':pc<80?'#d29922':'#3fb950'}"></i></div><span class="${pc<50?'bad':pc<80?'mid':'good'}">${L.filter(x=>isHit(x.res)).length}/${L.length} (${pc}%)</span></div>
+      ${e.note?`<div class="mut">Coach: ${esc(e.note)}</div>`:''}
+      ${miss.length?`<div class="mut">Missed by: ${esc(miss.join(', '))}</div>`:''}
+      ${wrong.length?`<div class="mut">Wrong category: ${esc(wrong.join(', '))}</div>`:''}
+      ${why.length?`<details><summary>${why.length} reflection${why.length==1?'':'s'}</summary>${why.map(x=>`<div class="mut"><b>${esc(x.s)}:</b> ${esc(x.why)}</div>`).join('')}</details>`:''}</div></div>`}).join('')}</div>`}).join('');
+}
+$('#cexp').onclick=()=>{
+  const V=agg(),q=v=>'"'+String(v).replace(/"/g,'""')+'"',L=[['Video','Coach time (s)','Coach category','Coach note','Students','Perfect','Wrong category','Missed','Spotted %','Missed by']];
+  Object.entries(V).forEach(([vn,v])=>Object.values(v.ev).sort((a,b)=>a.t-b.t).forEach(e=>{
+    const l=e.list,h=l.filter(x=>isHit(x.res)).length;
+    L.push([vn,e.t.toFixed(1),e.cc,e.note,l.length,l.filter(x=>x.res==='perfect').length,l.filter(x=>x.res.startsWith('right')).length,l.filter(x=>x.res==='missed').length,Math.round(h/l.length*100),l.filter(x=>x.res==='missed').map(x=>x.s).join('; ')])}));
+  if(L.length<2)return alert('Load some student CSVs first.');
+  saveBlob(new Blob(['\ufeff'+L.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}),'vod-class-summary.csv')};
+$('#mClass').onclick=()=>setMode('class');
+/* ---- local storage for attempts ---- */
+function getAttempt(){try{return JSON.parse(localStorage.getItem('vodattempts')||'{}')[vids[cur].id]||{}}catch(e){return{}}}
+function putAttempts(A){try{localStorage.setItem('vodattempts',JSON.stringify(A));return true}catch(e){return false}}
+function saveAttempt(){
+  try{
+    const A=JSON.parse(localStorage.getItem('vodattempts')||'{}'),id=vids[cur].id;
+    if(!marks.length&&!snaps.length&&!lastRes)delete A[id];
+    else{A[id]={marks,snaps,scored:!!lastRes,t:Date.now()};if(!putAttempts(A)){A[id].snaps=[];putAttempts(A)}return}
+    putAttempts(A);
+  }catch(e){}
+}
+function clearAttempt(){try{const A=JSON.parse(localStorage.getItem('vodattempts')||'{}');delete A[vids[cur].id];putAttempts(A)}catch(e){}}
+try{$('#who').value=localStorage.getItem('vodwho')||''}catch(e){}
+$('#who').oninput=()=>{try{localStorage.setItem('vodwho',$('#who').value)}catch(e){}};
+if(cls.length)$('#cmsg').textContent='Restored '+cls.length+' saved file'+(cls.length==1?'':'s')+' from this browser. Press Clear to remove them.';
 drawSel();drawTags();setMode('play');
 </script></body></html>
