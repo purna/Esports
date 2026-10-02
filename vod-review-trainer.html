@@ -110,7 +110,7 @@ const TAGS=[
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let vids=JSON.parse(localStorage.getItem('vodvids')||'null')||[{id:'lvZgX1XI1BU',start:480,title:'Nigel\'s test video - build the key in Coach mode',key:[]}];
-let cur=0,mode='play',marks=[],player,ready=false,dur=0,lastRes=null,snaps=[],maxT=0,lastSB=-1;
+let cur=0,mode='play',marks=[],player,ready=false,dur=0,lastRes=null,snaps=[],maxT=0,lastSB=-1,tracking=false,triedSeek=false,durWarned=false;
 vids.forEach(v=>{if(v.id==='lvZgX1XI1BU'&&v.start==null)v.start=480});
 const save=()=>localStorage.setItem('vodvids',JSON.stringify(vids));
 const fmt=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
@@ -132,7 +132,7 @@ function loadVid(){
   if(!ready)return;
   const strict=mode==='play';
   const att0=getAttempt(),resume=(strict&&!att0.scored&&att0.maxT>(vids[cur].start||0)+1)?att0.maxT:0;
-  maxT=resume||vids[cur].start||0;lastSB=-1;
+  maxT=resume||vids[cur].start||0;lastSB=-1;tracking=false;triedSeek=false;durWarned=false;
   $('#vw').classList.toggle('strict',strict);
   const id=vids[cur].id;
   ['#bBack','#bFwd','#seek','#spd'].forEach(q=>$(q).classList.toggle('hide',strict));
@@ -171,9 +171,12 @@ function render(){
 }
 setInterval(()=>{if(!player||!player.getCurrentTime)return;const t=now();$('#clock').textContent=fmt(t);
   if(mode==='play'&&!lastRes){const st=player.getPlayerState();
-    if(st===1||st===2){if(t<maxT-1.5||t>maxT+3)player.seekTo(maxT,true);else if(t>maxT)maxT=t}
+    if(st===1||st===2){
+      if(!tracking){if(t>=maxT-1.5&&t<=maxT+3)tracking=true;else if(st===1&&!triedSeek){triedSeek=true;player.seekTo(maxT,true)}}
+      else if(t<maxT-1.5||t>maxT+3)player.seekTo(maxT,true);else if(t>maxT)maxT=t}
     if(Math.floor(t/5)!==lastSB){lastSB=Math.floor(t/5);saveAttempt()}}
-  const d=player.getDuration?player.getDuration():0;if(d&&d!==dur)render();if(d){$('#ph').style.left=pos(t)+'%';$('#dtot').textContent=fmt(vids[cur].end||d);if(document.activeElement!==$('#seek'))$('#seek').value=pos(t)*10;const en=vids[cur].end;if(en&&t>=en-0.3&&player.getPlayerState()===1){player.pauseVideo();if(mode==='play'&&marks.length)finish()}}},250);
+  const d=player.getDuration?player.getDuration():0;if(d&&d!==dur)render();
+  if(d>0&&!durWarned&&(vids[cur].start||0)>=d-2){durWarned=true;const b=$('#vmsg');b.innerHTML='<b>This video is only '+fmt(d)+' long</b>, so a Start of '+fmt(vids[cur].start)+' is past the end. Lower the <b>Start</b> time in Video library.';b.classList.remove('hide')}if(d){$('#ph').style.left=pos(t)+'%';$('#dtot').textContent=fmt(vids[cur].end||d);if(document.activeElement!==$('#seek'))$('#seek').value=pos(t)*10;const en=vids[cur].end;if(en&&t>=en-0.3&&player.getPlayerState()===1){player.pauseVideo();if(mode==='play'&&marks.length)finish()}}},250);
 
 function finish(){
   if(mode!=='play')return;
@@ -291,7 +294,12 @@ async function saveFrame(){
   }catch(e){alert("Screen capture was cancelled or isn't supported here, so the drawing was saved on its own.");saveAnn()}
 }
 const P=f=>{try{f(player)}catch(e){}},strictOn=()=>mode==='play'&&!lastRes;
-$('#bPlay').onclick=()=>P(p=>p.playVideo());
+$('#bPlay').onclick=()=>P(p=>{
+  const st=p.getPlayerState(),v=vids[cur];
+  if(st===1||st===2||st===3){p.playVideo();return}
+  const a=(mode==='play'&&!lastRes?maxT:v.start)||0;
+  p.loadVideoById({videoId:v.id,startSeconds:a,...(v.end>0?{endSeconds:v.end}:{})});
+});
 $('#bPause').onclick=()=>P(p=>p.pauseVideo());
 $('#bStop').onclick=()=>P(p=>{p.pauseVideo();if(mode!=='play')p.seekTo(vids[cur].start||0,true)});
 $('#bBack').onclick=()=>{if(!strictOn())P(p=>p.seekTo(Math.max(vids[cur].start||0,p.getCurrentTime()-5),true))};
