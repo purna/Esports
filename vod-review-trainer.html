@@ -28,8 +28,9 @@ main{display:grid;grid-template-columns:minmax(0,2fr) minmax(280px,1fr);gap:16px
 .big{font-size:34px;font-weight:700}
 label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 #vw{position:absolute;inset:0}
-#ann{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
+#ann{outline:3px dashed #ffd60a;outline-offset:-3px;position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:none}
 #atools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;padding:10px;border:1px dashed var(--ac);border-radius:10px}
+.sw.on{box-shadow:0 0 0 3px var(--ac)}
 .sw{width:26px;height:26px;padding:0;border-radius:50%;border:2px solid #fff}
 #tags{display:grid;grid-template-columns:1fr 1fr;margin:0}#tags button{padding:14px 8px;font-size:15px}#tags button:first-child{grid-column:1/-1}
 .cv{max-width:1100px;margin:16px auto;padding:0 16px;display:grid;gap:16px}
@@ -56,8 +57,9 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <select id="spd" title="Speed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
 <button id="annB">✏️ Annotate this frame</button></div>
 <div id="atools" class="hide">
+<div class="mut" style="width:100%"><b style="color:var(--tx)">Drawing mode:</b> click and drag on the video to draw. Pick a tool and colour first.</div>
 <button data-tool="pen" class="on">✏️ Pen</button><button data-tool="arrow">➡️ Arrow</button><button data-tool="circle">⭕ Circle</button><button data-tool="rect">▭ Box</button><button data-tool="text">🔤 Text</button>
-<button class="sw" data-c="#ff3b30" style="background:#ff3b30"></button><button class="sw" data-c="#ffd60a" style="background:#ffd60a"></button><button class="sw" data-c="#30d158" style="background:#30d158"></button><button class="sw" data-c="#0a84ff" style="background:#0a84ff"></button>
+<button class="sw on" data-c="#ff3b30" style="background:#ff3b30"></button><button class="sw" data-c="#ffd60a" style="background:#ffd60a"></button><button class="sw" data-c="#30d158" style="background:#30d158"></button><button class="sw" data-c="#0a84ff" style="background:#0a84ff"></button>
 <button id="aUndo">Undo</button><button id="aClr">Clear</button>
 <button id="aSaveF">💾 Save with video frame</button><button id="aSaveA">💾 Save drawing only</button><button id="aClose">Done</button>
 <div class="mut" style="width:100%">"With video frame" uses screen capture: when your browser asks, choose <b>This tab</b>. If it isn't available, the drawing is saved on its own (transparent PNG).</div>
@@ -119,8 +121,9 @@ const ytId=u=>(u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1]
 
 function onYouTubeIframeAPIReady(){ready=true;loadVid()}
 let bufTimer;
-function buf(on,t){const b=$('#buf');clearTimeout(bufTimer);b.classList.toggle('hide',!on);
-  if(on){b.textContent='Loading from '+fmt(t)+'… YouTube has to buffer this part of the video.';bufTimer=setTimeout(()=>{b.textContent='Still loading… slow connection? Press ▶ Play again.'},15000)}}
+function buf(on,t,msg){const b=$('#buf');clearTimeout(bufTimer);b.classList.toggle('hide',!on);
+  if(on){b.textContent=msg||('Loading from '+fmt(t)+'… YouTube has to buffer this part of the video.');
+    bufTimer=setTimeout(()=>{b.textContent=msg?'Still waiting for YouTube… check your internet connection or any ad blocker.':'Still loading… slow connection? Press ▶ Play again.'},15000)}}
 function vNote(code){
   const id=vids[cur].id,M={2:'The video link looks invalid.',5:'The browser player hit an error.',100:'This video was removed or is private.',101:'The owner has disabled embedding for this video.',150:'The owner has disabled embedding for this video.',153:'YouTube refused the embed because the page has no web address, which happens when the file is opened by double-click.'};
   let h='';
@@ -132,7 +135,7 @@ function vNote(code){
 setTimeout(()=>{if(!(window.YT&&YT.Player)){const b=$('#vmsg');b.innerHTML="Couldn't load YouTube's player script. Check your internet connection or any ad/privacy blocker.";b.classList.remove('hide')}},8000);
 function clipVars(r){const v=vids[cur],st=r||v.start;return{...(st>0?{start:Math.floor(st)}:{}),...(v.end>0?{end:Math.ceil(v.end)}:{})}}
 function loadVid(){
-  syncClip();vNote();$('#pst').textContent='player: loading…';$('#spd').value='1';
+  syncClip();vNote();buf(true,0,'Loading the video player…');$('#pst').textContent='player: loading…';$('#spd').value='1';
   if(!ready)return;
   const strict=mode==='play';
   const att0=getAttempt(),resume=(strict&&!att0.scored&&att0.maxT>(vids[cur].start||0)+1)?att0.maxT:0;
@@ -144,7 +147,7 @@ function loadVid(){
   if(player&&player.destroy)player.destroy();
   $('#vw').innerHTML='<div id="yt"></div>';
   player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1,...clipVars(resume),...(location.protocol.startsWith('http')?{origin:location.origin}:{})},
-    events:{onReady:()=>{$('#pst').textContent='player: ready'},onError:e=>{vNote(e.data);$('#pst').textContent='player: error '+e.data},onStateChange:e=>{if(e.data===3)buf(true,mode==='play'&&!lastRes?maxT:(vids[cur].start||0));else buf(false);$('#pst').textContent='player: '+({'-1':'ready',0:'ended',1:'playing',2:'paused',3:'buffering',5:'ready'}[e.data]||e.data);if(e.data===0&&mode==='play'&&marks.length)finish()}}});
+    events:{onReady:()=>{$('#pst').textContent='player: ready';buf(false)},onError:e=>{buf(false);vNote(e.data);$('#pst').textContent='player: error '+e.data},onStateChange:e=>{if(e.data===3)buf(true,mode==='play'&&!lastRes?maxT:(vids[cur].start||0));else buf(false);$('#pst').textContent='player: '+({'-1':'ready',0:'ended',1:'playing',2:'paused',3:'buffering',5:'ready'}[e.data]||e.data);if(e.data===0&&mode==='play'&&marks.length)finish()}}});
   const att=getAttempt();marks=att.marks||[];snaps=att.snaps||[];lastRes=null;$('#res').classList.add('hide');$('#snapn').textContent=snaps.length;closeAnn();render();
   if(att.scored&&mode==='play')finish();
 }
@@ -269,7 +272,7 @@ function drawShape(s){
 }
 function drawAll(){cx.clearRect(0,0,cv.width,cv.height);shapes.forEach(drawShape);if(drag)drawShape(drag)}
 function openAnn(){
-  if(!player||!player.pauseVideo)return;player.pauseVideo();annT=now();
+  try{player.pauseVideo()}catch(e){}annT=now();
   const r=$('#vwrap').getBoundingClientRect();cv.width=r.width;cv.height=r.height;
   annOn=true;shapes=[];cv.classList.remove('hide');$('#atools').classList.remove('hide');drawAll();
 }
@@ -314,7 +317,7 @@ $('#seek').oninput=e=>{if(!strictOn())P(p=>{const a=vids[cur].start||0,b=vids[cu
 $('#annB').onclick=openAnn;$('#aClose').onclick=closeAnn;$('#aSaveA').onclick=saveAnn;$('#aSaveF').onclick=saveFrame;
 $('#aUndo').onclick=()=>{shapes.pop();drawAll()};$('#aClr').onclick=()=>{shapes=[];drawAll()};
 document.querySelectorAll('#atools [data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;document.querySelectorAll('#atools [data-tool]').forEach(x=>x.classList.toggle('on',x===b))});
-document.querySelectorAll('#atools [data-c]').forEach(b=>b.onclick=()=>col=b.dataset.c);
+document.querySelectorAll('#atools [data-c]').forEach(b=>b.onclick=()=>{col=b.dataset.c;document.querySelectorAll('#atools [data-c]').forEach(x=>x.classList.toggle('on',x===b))});
 /* ---- export ---- */
 function repRows(){
   const R=[];
