@@ -35,6 +35,7 @@ label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mut)}
 .cv{max-width:1100px;margin:16px auto;padding:0 16px;display:grid;gap:16px}
 .bar{height:8px;background:#0b0e14;border-radius:4px;overflow:hidden;flex:1;min-width:120px}.bar i{display:block;height:100%}
 details summary{cursor:pointer;color:var(--mut);font-size:13px}
+#buf{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.75);padding:10px 16px;border-radius:8px;pointer-events:none;z-index:2;text-align:center;max-width:80%;font-size:14px}
 </style></head><body>
 <header>
 <h1>🎮 VOD Review Trainer</h1>
@@ -45,7 +46,7 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <main>
 <section style="display:grid;gap:16px;align-content:start">
 <div class="card">
-<div id="vwrap" class="vid"><div id="vw"><div id="yt"></div></div><canvas id="ann" class="hide"></canvas></div>
+<div id="vwrap" class="vid"><div id="vw"><div id="yt"></div></div><canvas id="ann" class="hide"></canvas><div id="buf" class="hide"></div></div>
 <div id="vmsg" class="hide" style="margin-top:8px;padding:10px;border-radius:8px;background:#3a1f1f;border:1px solid #f85149;font-size:14px;line-height:1.5"></div>
 <div id="tl"><div id="ph"></div></div>
 <div class="mut" style="margin-top:6px"><span id="clock">0:00</span> / <span id="dtot">-:--</span> · <span id="pst">player: loading…</span> · <span id="hint"></span></div>
@@ -117,6 +118,9 @@ const fmt=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
 const ytId=u=>(u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
 
 function onYouTubeIframeAPIReady(){ready=true;loadVid()}
+let bufTimer;
+function buf(on,t){const b=$('#buf');clearTimeout(bufTimer);b.classList.toggle('hide',!on);
+  if(on){b.textContent='Loading from '+fmt(t)+'… YouTube has to buffer this part of the video.';bufTimer=setTimeout(()=>{b.textContent='Still loading… slow connection? Press ▶ Play again.'},15000)}}
 function vNote(code){
   const id=vids[cur].id,M={2:'The video link looks invalid.',5:'The browser player hit an error.',100:'This video was removed or is private.',101:'The owner has disabled embedding for this video.',150:'The owner has disabled embedding for this video.',153:'YouTube refused the embed because the page has no web address, which happens when the file is opened by double-click.'};
   let h='';
@@ -140,7 +144,7 @@ function loadVid(){
   if(player&&player.destroy)player.destroy();
   $('#vw').innerHTML='<div id="yt"></div>';
   player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1,...clipVars(resume),...(location.protocol.startsWith('http')?{origin:location.origin}:{})},
-    events:{onReady:()=>{$('#pst').textContent='player: ready'},onError:e=>{vNote(e.data);$('#pst').textContent='player: error '+e.data},onStateChange:e=>{$('#pst').textContent='player: '+({'-1':'ready',0:'ended',1:'playing',2:'paused',3:'buffering',5:'ready'}[e.data]||e.data);if(e.data===0&&mode==='play'&&marks.length)finish()}}});
+    events:{onReady:()=>{$('#pst').textContent='player: ready'},onError:e=>{vNote(e.data);$('#pst').textContent='player: error '+e.data},onStateChange:e=>{if(e.data===3)buf(true,mode==='play'&&!lastRes?maxT:(vids[cur].start||0));else buf(false);$('#pst').textContent='player: '+({'-1':'ready',0:'ended',1:'playing',2:'paused',3:'buffering',5:'ready'}[e.data]||e.data);if(e.data===0&&mode==='play'&&marks.length)finish()}}});
   const att=getAttempt();marks=att.marks||[];snaps=att.snaps||[];lastRes=null;$('#res').classList.add('hide');$('#snapn').textContent=snaps.length;closeAnn();render();
   if(att.scored&&mode==='play')finish();
 }
@@ -298,6 +302,7 @@ $('#bPlay').onclick=()=>P(p=>{
   const st=p.getPlayerState(),v=vids[cur];
   if(st===1||st===2||st===3){p.playVideo();return}
   const a=(mode==='play'&&!lastRes?maxT:v.start)||0;
+  buf(true,a);
   p.loadVideoById({videoId:v.id,startSeconds:a,...(v.end>0?{endSeconds:v.end}:{})});
 });
 $('#bPause').onclick=()=>P(p=>p.pauseVideo());
