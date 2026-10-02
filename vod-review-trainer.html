@@ -48,8 +48,12 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <div id="vwrap" class="vid"><div id="vw"><div id="yt"></div></div><canvas id="ann" class="hide"></canvas></div>
 <div id="vmsg" class="hide" style="margin-top:8px;padding:10px;border-radius:8px;background:#3a1f1f;border:1px solid #f85149;font-size:14px;line-height:1.5"></div>
 <div id="tl"><div id="ph"></div></div>
-<div class="mut" style="margin-top:6px"><span id="clock">0:00</span> · <span id="hint"></span></div>
-<div style="display:flex;gap:8px;margin-top:12px"><button id="pp">⏯ Pause / Play</button><button id="annB">✏️ Annotate this frame</button></div>
+<div class="mut" style="margin-top:6px"><span id="clock">0:00</span> / <span id="dtot">-:--</span> · <span id="pst">player: loading…</span> · <span id="hint"></span></div>
+<input type="range" id="seek" min="0" max="1000" value="0" style="width:100%;margin-top:10px;padding:0">
+<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center">
+<button id="bBack" title="Back 5 seconds">⏪ 5s</button><button id="bPlay">▶ Play</button><button id="bPause">⏸ Pause</button><button id="bStop">⏹ Stop</button><button id="bFwd" title="Forward 5 seconds">5s ⏩</button>
+<select id="spd" title="Speed"><option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+<button id="annB">✏️ Annotate this frame</button></div>
 <div id="atools" class="hide">
 <button data-tool="pen" class="on">✏️ Pen</button><button data-tool="arrow">➡️ Arrow</button><button data-tool="circle">⭕ Circle</button><button data-tool="rect">▭ Box</button><button data-tool="text">🔤 Text</button>
 <button class="sw" data-c="#ff3b30" style="background:#ff3b30"></button><button class="sw" data-c="#ffd60a" style="background:#ffd60a"></button><button class="sw" data-c="#30d158" style="background:#30d158"></button><button class="sw" data-c="#0a84ff" style="background:#0a84ff"></button>
@@ -62,11 +66,13 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <select id="sel" style="width:100%"></select>
 <div style="display:flex;gap:6px;margin-top:8px"><input id="url" placeholder="Paste YouTube URL" style="flex:1;min-width:0"><button id="add">Add</button></div>
 <input id="ttl" placeholder="Title (optional)" style="width:100%;margin-top:6px">
+<div style="display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap"><label>Start <input id="tStart" placeholder="0:00" style="width:80px"></label><label>End <input id="tEnd" placeholder="end" style="width:80px"></label></div>
+<div class="mut" style="margin-top:4px">Clip for the selected video, e.g. 8:00 to 11:30. Leave End empty to play to the finish.</div>
 <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
 <button id="exp">Export</button><button id="imp">Import</button><button id="del">Delete video</button>
 <input type="file" id="file" class="hide" accept=".json"></div></div>
 <div class="card" id="pPlay"><h2>Test settings</h2>
-<label><input type="checkbox" id="strict"> Hide player controls (no scrubbing)</label>
+<div class="mut">Test mode is always on for students: they can pause or stop to write notes, but cannot rewind, skip or change speed.</div>
 <label style="margin-top:6px">Timing window <input id="win" type="number" value="5" min="2" max="15" style="width:60px"> s</label>
 <button id="go" style="margin-top:10px;width:100%">▶ Start / restart</button></div>
 </section>
@@ -74,6 +80,7 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <div class="card"><h2>Mark what you see</h2>
 <div class="tags" id="tags"></div>
 <input id="note" class="hide" placeholder="Coach note for next mark (why does this matter?)" style="width:100%">
+<details id="tagHelp" open style="margin-top:10px"></details>
 </div>
 <div class="card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><h2 id="lh" style="margin:0 auto 0 0">Your marks</h2><button id="fin">Finish &amp; score</button></div><div id="list" class="list"></div></div>
 <div class="card hide" id="res"></div>
@@ -94,11 +101,17 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-const TAGS=[{n:'Success',c:'#3fb950'},{n:'Positioning',c:'#f85149'},{n:'Mechanics',c:'#d29922'},{n:'Decision / Macro',c:'#a371f7'},{n:'Comms / Utility',c:'#39c5cf'}];
+const TAGS=[
+{n:'Success',c:'#3fb950',d:'A good play worth repeating: a smart decision, strong execution or good teamwork. Press it when the player gets something right.'},
+{n:'Positioning',c:'#f85149',d:'Where the player stands or moves: exposed to fire, out of position, bad angle, too far from teammates, or poor use of cover.'},
+{n:'Mechanics',c:'#d29922',d:'Raw skill: aim, movement, recoil control, reaction time, missed shots or poor ability execution.'},
+{n:'Decision / Macro',c:'#a371f7',d:'Game sense and choices: taking or avoiding a fight, objective priority, rotations, timing, spending resources.'},
+{n:'Comms / Utility',c:'#39c5cf',d:'Teamwork and tools: calling out information, using abilities, grenades or items well (or not at all), supporting teammates.'}];
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let vids=JSON.parse(localStorage.getItem('vodvids')||'null')||[{id:'lvZgX1XI1BU',title:'Nigel\'s test video - build the key in Coach mode',key:[]}];
-let cur=0,mode='play',marks=[],player,ready=false,dur=0,lastRes=null,snaps=[];
+let vids=JSON.parse(localStorage.getItem('vodvids')||'null')||[{id:'lvZgX1XI1BU',start:480,title:'Nigel\'s test video - build the key in Coach mode',key:[]}];
+let cur=0,mode='play',marks=[],player,ready=false,dur=0,lastRes=null,snaps=[],maxT=0,lastSB=-1;
+vids.forEach(v=>{if(v.id==='lvZgX1XI1BU'&&v.start==null)v.start=480});
 const save=()=>localStorage.setItem('vodvids',JSON.stringify(vids));
 const fmt=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
 const ytId=u=>(u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
@@ -113,45 +126,54 @@ function vNote(code){
   const b=$('#vmsg');b.innerHTML=h;b.classList.toggle('hide',!h);
 }
 setTimeout(()=>{if(!(window.YT&&YT.Player)){const b=$('#vmsg');b.innerHTML="Couldn't load YouTube's player script. Check your internet connection or any ad/privacy blocker.";b.classList.remove('hide')}},8000);
+function clipVars(r){const v=vids[cur],st=r||v.start;return{...(st>0?{start:Math.floor(st)}:{}),...(v.end>0?{end:Math.ceil(v.end)}:{})}}
 function loadVid(){
-  vNote();
+  syncClip();vNote();$('#pst').textContent='player: loading…';$('#spd').value='1';
   if(!ready)return;
-  const strict=mode==='play'&&$('#strict').checked;
+  const strict=mode==='play';
+  const att0=getAttempt(),resume=(strict&&!att0.scored&&att0.maxT>(vids[cur].start||0)+1)?att0.maxT:0;
+  maxT=resume||vids[cur].start||0;lastSB=-1;
   $('#vw').classList.toggle('strict',strict);
   const id=vids[cur].id;
+  ['#bBack','#bFwd','#seek','#spd'].forEach(q=>$(q).classList.toggle('hide',strict));
+  setTimeout(()=>{if($('#pst').textContent==='player: loading…')$('#pst').textContent='player: not responding (see message above)'},10000);
   if(player&&player.destroy)player.destroy();
   $('#vw').innerHTML='<div id="yt"></div>';
-  player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1,...(location.protocol.startsWith('http')?{origin:location.origin}:{})},
-    events:{onError:e=>vNote(e.data),onStateChange:e=>{if(e.data===0&&mode==='play'&&marks.length)finish()}}});
+  player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1,...clipVars(resume),...(location.protocol.startsWith('http')?{origin:location.origin}:{})},
+    events:{onReady:()=>{$('#pst').textContent='player: ready'},onError:e=>{vNote(e.data);$('#pst').textContent='player: error '+e.data},onStateChange:e=>{$('#pst').textContent='player: '+({'-1':'ready',0:'ended',1:'playing',2:'paused',3:'buffering',5:'ready'}[e.data]||e.data);if(e.data===0&&mode==='play'&&marks.length)finish()}}});
   const att=getAttempt();marks=att.marks||[];snaps=att.snaps||[];lastRes=null;$('#res').classList.add('hide');$('#snapn').textContent=snaps.length;closeAnn();render();
   if(att.scored&&mode==='play')finish();
 }
 function drawSel(){$('#sel').innerHTML=vids.map((v,i)=>`<option value="${i}">${v.title}</option>`).join('');$('#sel').value=cur}
 function drawTags(){
-  $('#tags').innerHTML=TAGS.map((t,i)=>`<button data-i="${i}" style="border-color:${t.c}">${t.n}<small>[${i+1}]</small></button>`).join('');
+  $('#tags').innerHTML=TAGS.map((t,i)=>`<button data-i="${i}" title="${esc(t.d)}" style="border-color:${t.c}">${t.n}<small>[${i+1}]</small></button>`).join('');
   document.querySelectorAll('#tags button').forEach(b=>b.onclick=()=>mark(+b.dataset.i));
+  $('#tagHelp').innerHTML='<summary style="cursor:pointer"><b>What do these buttons mean?</b></summary>'+TAGS.map(t=>`<div style="display:flex;gap:8px;margin-top:8px;align-items:flex-start"><span style="width:10px;height:10px;border-radius:50%;flex:none;margin-top:5px;background:${t.c}"></span><div><b>${t.n}</b> <span class="mut">${t.d}</span></div></div>`).join('')+'<div class="mut" style="margin-top:10px">Press a button the moment you notice it, not afterwards: it records the current video time. If you are unsure, pick the closest category, then use the box under your mark to explain what the player should have done.</div>';
 }
 function now(){try{return player.getCurrentTime()}catch(e){return 0}}
 function mark(i){
   if(!player||!player.getPlayerState)return;
   const t=now();
   if(mode==='coach'){const n=$('#note').value.trim();vids[cur].key.push({t,tag:i,note:n});vids[cur].key.sort((a,b)=>a.t-b.t);$('#note').value='';save()}
-  else{if(![1,2].includes(player.getPlayerState()))return;marks.push({t,tag:i})}
+  else{if(lastRes||![1,2].includes(player.getPlayerState()))return;marks.push({t,tag:i})}
   render();
 }
 function render(){
   const list=mode==='coach'?vids[cur].key:marks;
   $('#lh').textContent=mode==='coach'?'Answer key (coach marks)':'Your marks';
   $('#list').innerHTML=list.map((m,k)=>`<div class="row"><span class="d" style="background:${TAGS[m.tag].c}"></span><b>${fmt(m.t)}</b>${TAGS[m.tag].n}<span class="mut">${m.note||''}</span><button class="x" data-k="${k}">✕</button>${mode==='play'?`<input class="rf" data-k="${k}" placeholder="What should the player have done?" value="${esc(m.why||'')}" style="width:100%;font-size:13px">`:''}</div>`).join('')||'<div class="mut">Nothing marked yet.</div>';
-  document.querySelectorAll('#list .x').forEach(b=>b.onclick=()=>{list.splice(+b.dataset.k,1);save();render()});
+  document.querySelectorAll('#list .x').forEach(b=>b.onclick=()=>{if(mode==='play'&&lastRes)return;list.splice(+b.dataset.k,1);save();render()});
   document.querySelectorAll('#list .rf').forEach(i=>i.oninput=()=>{marks[+i.dataset.k].why=i.value;saveAttempt()});
   document.querySelectorAll('#tl i').forEach(e=>e.remove());
   dur=player&&player.getDuration?player.getDuration():0;
   if(mode==='play')saveAttempt();
-  if(dur)list.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${m.t/dur*100}%;background:${TAGS[m.tag].c}`;$('#tl').appendChild(e)});
+  if(dur)list.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${pos(m.t)}%;background:${TAGS[m.tag].c}`;$('#tl').appendChild(e)});
 }
 setInterval(()=>{if(!player||!player.getCurrentTime)return;const t=now();$('#clock').textContent=fmt(t);
-  const d=player.getDuration?player.getDuration():0;if(d&&d!==dur)render();if(d)$('#ph').style.left=t/d*100+'%'},250);
+  if(mode==='play'&&!lastRes){const st=player.getPlayerState();
+    if(st===1||st===2){if(t<maxT-1.5||t>maxT+3)player.seekTo(maxT,true);else if(t>maxT)maxT=t}
+    if(Math.floor(t/5)!==lastSB){lastSB=Math.floor(t/5);saveAttempt()}}
+  const d=player.getDuration?player.getDuration():0;if(d&&d!==dur)render();if(d){$('#ph').style.left=pos(t)+'%';$('#dtot').textContent=fmt(vids[cur].end||d);if(document.activeElement!==$('#seek'))$('#seek').value=pos(t)*10;const en=vids[cur].end;if(en&&t>=en-0.3&&player.getPlayerState()===1){player.pauseVideo();if(mode==='play'&&marks.length)finish()}}},250);
 
 function finish(){
   if(mode!=='play')return;
@@ -169,6 +191,7 @@ function finish(){
   const fa=marks.length-used.size;
   const pct=Math.max(0,Math.round((pts-0.5*fa)/(2*key.length)*100));
   lastRes={vid:cur,pct,hit,n:key.length,fa,rows,extra:marks.filter((m,i)=>!used.has(i))};saveAttempt();
+  ['#bBack','#bFwd','#seek'].forEach(q=>$(q).classList.remove('hide'));$('#vw').classList.remove('strict');
   $('#res').classList.remove('hide');
   $('#res').innerHTML=`<h2>Result</h2><div class="big">${pct}%</div>
   <div class="mut">Spotted ${hit}/${key.length} · ${fa} false alarm${fa==1?'':'s'}</div>
@@ -178,19 +201,19 @@ function finish(){
   document.querySelectorAll('#res .row').forEach(r=>r.onclick=()=>{$('#vw').classList.remove('strict');player.seekTo(+r.dataset.t,true);player.playVideo()});
   // overlay key on timeline
   document.querySelectorAll('#tl i').forEach(e=>e.remove());
-  if(dur)key.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${m.t/dur*100}%;background:${TAGS[m.tag].c};outline:2px solid #fff`;$('#tl').appendChild(e)});
+  if(dur)key.forEach(m=>{const e=document.createElement('i');e.style.cssText=`left:${pos(m.t)}%;background:${TAGS[m.tag].c};outline:2px solid #fff`;$('#tl').appendChild(e)});
 }
 const HELP={
 play:{t:'Student: Play',s:[
 'Choose the video in <b>Video library</b> (left), then press <b>▶ Start / restart</b>.',
-'Watch like a hazard-perception test. The moment you spot something a coach would mention, press a category on the right (or keys <b>1-5</b>): <b>Success</b> for good play, the others for problems.',
-'Need a closer look? <b>⏯ Pause / Play</b> any time. You can still mark while paused.',
+'Watch like a hazard-perception test. The moment you spot something a coach would mention, press a category on the right (or keys <b>1-5</b>): <b>Success</b> for good play, the others for problems. Not sure which to press? Open <b>What do these buttons mean?</b> under the buttons.',
+'This is a test: you can <b>⏸ Pause</b> or <b>⏹ Stop</b> any time to write notes, and mark while paused, but you cannot rewind, skip or change the speed. Refreshing the page will not rewind you either.',
 'Under each mark, type what the player should have done. This goes into your report.',
 'Optional: <b>✏️ Annotate this frame</b> to draw on the paused picture, then save it as an image.',
 'Press <b>Finish &amp; score</b> to compare your marks with the coach\'s answer key, then click a result to replay that moment.',
 'Type your name in <b>Export</b> and download the <b>CSV</b> (send this to your coach) or the <b>PDF report</b>.']},
 coach:{t:'Coach: Build answer key',s:[
-'Paste a YouTube link into <b>Video library</b>, add a title, then press <b>Add</b>.',
+'Paste a YouTube link into <b>Video library</b>, add a title, then press <b>Add</b>. Set <b>Start</b> and <b>End</b> if you only want part of the video (for example 8:00 to 11:30).',
 'Play the video and press a category (or keys <b>1-5</b>) at every moment a student should catch. Include good plays as <b>Success</b>.',
 'Before marking, type a note in the box: the model answer to "what should the player have done?". Students see it after scoring.',
 'Check the list on the right. Remove any mistimed mark with ✕ and re-mark it.',
@@ -216,7 +239,7 @@ function setMode(m){
 }
 $('#mPlay').onclick=()=>setMode('play');$('#mCoach').onclick=()=>setMode('coach');
 $('#sel').onchange=e=>{cur=+e.target.value;setMode(mode)};
-$('#go').onclick=()=>{$('#res').classList.add('hide');clearAttempt();loadVid();setTimeout(()=>{try{player.playVideo()}catch(e){}},1200)};
+$('#go').onclick=()=>{if((marks.length||maxT>(vids[cur].start||0)+1)&&!confirm('Starting again clears your marks and takes you back to the beginning. Continue?'))return;$('#res').classList.add('hide');clearAttempt();loadVid();setTimeout(()=>{try{player.playVideo()}catch(e){}},1200)};
 $('#fin').onclick=finish;
 $('#add').onclick=()=>{const id=ytId($('#url').value);if(!id)return alert('Could not read a YouTube link.');
   vids.push({id,title:$('#ttl').value||'Video '+id,key:[]});cur=vids.length-1;$('#url').value=$('#ttl').value='';save();drawSel();setMode('coach')};
@@ -267,7 +290,14 @@ async function saveFrame(){
     s.getTracks().forEach(t=>t.stop());stamp(o);dl(o);
   }catch(e){alert("Screen capture was cancelled or isn't supported here, so the drawing was saved on its own.");saveAnn()}
 }
-$('#pp').onclick=()=>{if(player&&player.getPlayerState)player.getPlayerState()===1?player.pauseVideo():player.playVideo()};
+const P=f=>{try{f(player)}catch(e){}},strictOn=()=>mode==='play'&&!lastRes;
+$('#bPlay').onclick=()=>P(p=>p.playVideo());
+$('#bPause').onclick=()=>P(p=>p.pauseVideo());
+$('#bStop').onclick=()=>P(p=>{p.pauseVideo();if(mode!=='play')p.seekTo(vids[cur].start||0,true)});
+$('#bBack').onclick=()=>{if(!strictOn())P(p=>p.seekTo(Math.max(vids[cur].start||0,p.getCurrentTime()-5),true))};
+$('#bFwd').onclick=()=>{if(!strictOn())P(p=>p.seekTo(Math.min(vids[cur].end||1e9,p.getCurrentTime()+5),true))};
+$('#spd').onchange=e=>P(p=>p.setPlaybackRate(+e.target.value));
+$('#seek').oninput=e=>{if(!strictOn())P(p=>{const a=vids[cur].start||0,b=vids[cur].end||p.getDuration();p.seekTo(a+e.target.value/1000*(b-a),true)})};
 $('#annB').onclick=openAnn;$('#aClose').onclick=closeAnn;$('#aSaveA').onclick=saveAnn;$('#aSaveF').onclick=saveFrame;
 $('#aUndo').onclick=()=>{shapes.pop();drawAll()};$('#aClr').onclick=()=>{shapes=[];drawAll()};
 document.querySelectorAll('#atools [data-tool]').forEach(b=>b.onclick=()=>{tool=b.dataset.tool;document.querySelectorAll('#atools [data-tool]').forEach(x=>x.classList.toggle('on',x===b))});
@@ -382,12 +412,20 @@ function putAttempts(A){try{localStorage.setItem('vodattempts',JSON.stringify(A)
 function saveAttempt(){
   try{
     const A=JSON.parse(localStorage.getItem('vodattempts')||'{}'),id=vids[cur].id;
-    if(!marks.length&&!snaps.length&&!lastRes)delete A[id];
-    else{A[id]={marks,snaps,scored:!!lastRes,t:Date.now()};if(!putAttempts(A)){A[id].snaps=[];putAttempts(A)}return}
+    if(!marks.length&&!snaps.length&&!lastRes&&maxT<=(vids[cur].start||0)+1)delete A[id];
+    else{A[id]={marks,snaps,scored:!!lastRes,maxT,t:Date.now()};if(!putAttempts(A)){A[id].snaps=[];putAttempts(A)}return}
     putAttempts(A);
   }catch(e){}
 }
 function clearAttempt(){try{const A=JSON.parse(localStorage.getItem('vodattempts')||'{}');delete A[vids[cur].id];putAttempts(A)}catch(e){}}
+function pos(t){const a=vids[cur].start||0,b=vids[cur].end||dur||1;return Math.max(0,Math.min(100,(t-a)/(b-a)*100))}
+function syncClip(){const v=vids[cur];$('#tStart').value=v.start?fmt(v.start):'';$('#tEnd').value=v.end?fmt(v.end):''}
+function parseT(x){x=x.trim();if(!x)return null;if(/^\d+(\.\d+)?$/.test(x))return +x;const m=x.match(/^(?:(\d+):)?(\d{1,2}):(\d{2})$/);return m?(+(m[1]||0))*3600+(+m[2])*60+(+m[3]):NaN}
+function applyClip(){
+  const a=parseT($('#tStart').value),b=parseT($('#tEnd').value);
+  if(Number.isNaN(a)||Number.isNaN(b)||(b!=null&&b<=(a||0))){alert('Use times like 8:00 or 1:02:30, and make End later than Start.');syncClip();return}
+  vids[cur].start=a||0;vids[cur].end=b||0;save();loadVid()}
+$('#tStart').onchange=applyClip;$('#tEnd').onchange=applyClip;
 try{$('#who').value=localStorage.getItem('vodwho')||''}catch(e){}
 $('#who').oninput=()=>{try{localStorage.setItem('vodwho',$('#who').value)}catch(e){}};
 if(cls.length)$('#cmsg').textContent='Restored '+cls.length+' saved file'+(cls.length==1?'':'s')+' from this browser. Press Clear to remove them.';
