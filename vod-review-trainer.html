@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>VOD Review Trainer</title>
 <style>
@@ -45,6 +46,7 @@ details summary{cursor:pointer;color:var(--mut);font-size:13px}
 <section style="display:grid;gap:16px;align-content:start">
 <div class="card">
 <div id="vwrap" class="vid"><div id="vw"><div id="yt"></div></div><canvas id="ann" class="hide"></canvas></div>
+<div id="vmsg" class="hide" style="margin-top:8px;padding:10px;border-radius:8px;background:#3a1f1f;border:1px solid #f85149;font-size:14px;line-height:1.5"></div>
 <div id="tl"><div id="ph"></div></div>
 <div class="mut" style="margin-top:6px"><span id="clock">0:00</span> · <span id="hint"></span></div>
 <div style="display:flex;gap:8px;margin-top:12px"><button id="pp">⏯ Pause / Play</button><button id="annB">✏️ Annotate this frame</button></div>
@@ -102,15 +104,25 @@ const fmt=t=>Math.floor(t/60)+':'+String(Math.floor(t%60)).padStart(2,'0');
 const ytId=u=>(u.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/)||[])[1];
 
 function onYouTubeIframeAPIReady(){ready=true;loadVid()}
+function vNote(code){
+  const id=vids[cur].id,M={2:'The video link looks invalid.',5:'The browser player hit an error.',100:'This video was removed or is private.',101:'The owner has disabled embedding for this video.',150:'The owner has disabled embedding for this video.',153:'YouTube refused the embed because the page has no web address, which happens when the file is opened by double-click.'};
+  let h='';
+  if(code)h+='<div><b>Video error '+code+':</b> '+(M[code]||'Unknown error.')+'</div>';
+  if(location.protocol==='file:'||code===153)h+='<div>This page is open as a local file. Run <code>python3 -m http.server</code> in the same folder, then open <code>http://localhost:8000/vod-review-trainer.html</code>.</div>';
+  if([100,101,150].includes(code))h+='<div>Try a video that allows embedding, or <a style="color:#8ab4ff" target="_blank" href="https://www.youtube.com/watch?v='+id+'">open this one on YouTube</a>.</div>';
+  const b=$('#vmsg');b.innerHTML=h;b.classList.toggle('hide',!h);
+}
+setTimeout(()=>{if(!(window.YT&&YT.Player)){const b=$('#vmsg');b.innerHTML="Couldn't load YouTube's player script. Check your internet connection or any ad/privacy blocker.";b.classList.remove('hide')}},8000);
 function loadVid(){
+  vNote();
   if(!ready)return;
   const strict=mode==='play'&&$('#strict').checked;
   $('#vw').classList.toggle('strict',strict);
   const id=vids[cur].id;
   if(player&&player.destroy)player.destroy();
   $('#vw').innerHTML='<div id="yt"></div>';
-  player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1},
-    events:{onStateChange:e=>{if(e.data===0&&mode==='play'&&marks.length)finish()}}});
+  player=new YT.Player('yt',{videoId:id,playerVars:{controls:strict?0:1,disablekb:1,rel:0,modestbranding:1,playsinline:1,...(location.protocol.startsWith('http')?{origin:location.origin}:{})},
+    events:{onError:e=>vNote(e.data),onStateChange:e=>{if(e.data===0&&mode==='play'&&marks.length)finish()}}});
   const att=getAttempt();marks=att.marks||[];snaps=att.snaps||[];lastRes=null;$('#res').classList.add('hide');$('#snapn').textContent=snaps.length;closeAnn();render();
   if(att.scored&&mode==='play')finish();
 }
